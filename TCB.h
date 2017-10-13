@@ -1,0 +1,18 @@
+struct MyStruct{
+  void (*myTask)(void*);
+  void* taskDataPtr;
+};
+
+//TCB struct decl that hold method ref and data struct ref
+typedef struct MyStruct TCB;
+
+//declare the method that will simulate measurements
+void Measure(void * measureDataPtr);
+//declare the method that will compute corrected values
+void Compute(void * voidComputeDataPtr);
+//declare the method that will manage the display
+void Display(void * voidDisplayDataPtr);
+//declare the method that will check for warnings
+void WarningAlarm(void * voidWarningAlarmDataPtr);
+//declare the method that will decrement battery life
+void StatusMethod(void * voidStatusPtr);

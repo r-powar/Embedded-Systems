@@ -1,0 +1,349 @@
+###############################################################################
+#
+# IAR ELF Linker V8.11.3.13950/W32 for ARM                13/Oct/2017  13:19:13
+# Copyright 2007-2017 IAR Systems AB.
+#
+#    Output file  =  
+#        C:\StellarisWare\boards\ek-lm3s8962\project_2\Debug\Exe\project_2.out
+#    Map file     =  
+#        C:\StellarisWare\boards\ek-lm3s8962\project_2\Debug\List\project_2.map
+#    Command line =  
+#        -f C:\Users\Raj\AppData\Local\Temp\EWA237.tmp
+#        (C:\StellarisWare\boards\ek-lm3s8962\project_2\Debug\Obj\compute.o
+#        C:\StellarisWare\boards\ek-lm3s8962\project_2\Debug\Obj\display.o
+#        C:\StellarisWare\driverlib\ewarm-cm3\Exe\driverlib-cm3.a
+#        C:\StellarisWare\boards\ek-lm3s8962\project_2\Debug\Obj\main.o
+#        C:\StellarisWare\boards\ek-lm3s8962\project_2\Debug\Obj\measure.o
+#        C:\StellarisWare\boards\ek-lm3s8962\project_2\Debug\Obj\rit128x96x4.o
+#        C:\StellarisWare\boards\ek-lm3s8962\project_2\Debug\Obj\startup_ewarm.o
+#        C:\StellarisWare\boards\ek-lm3s8962\project_2\Debug\Obj\statusMethod.o
+#        C:\StellarisWare\boards\ek-lm3s8962\project_2\Debug\Obj\ustdlib.o
+#        C:\StellarisWare\boards\ek-lm3s8962\project_2\Debug\Obj\warning.o -o
+#        C:\StellarisWare\boards\ek-lm3s8962\project_2\Debug\Exe\project_2.out
+#        --redirect _Printf=_PrintfFullNoMb --redirect _Scanf=_ScanfFullNoMb
+#        --map
+#        C:\StellarisWare\boards\ek-lm3s8962\project_2\Debug\List\project_2.map
+#        --config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\arm\config\linker\TexasInstruments\LM3S8962.icf" --semihosting
+#        --entry __iar_program_start --vfe --text_out locale)
+#
+###############################################################################
+
+*******************************************************************************
+*** RUNTIME MODEL ATTRIBUTES
+***
+
+CppFlavor       = *
+__Heap_Handler  = NoFree
+__SystemLibrary = DLib
+__dlib_version  = 6
+
+
+*******************************************************************************
+*** HEAP SELECTION
+***
+
+The no free heap was selected because no calls to memory
+deallocation functions were found in the application.
+
+
+*******************************************************************************
+*** PLACEMENT SUMMARY
+***
+
+"A0":  place at 0x00000000 { ro section .intvec };
+"P1":  place in [from 0x00000000 to 0x0003ffff] { ro };
+define block CSTACK with size = 2K, alignment = 8 { };
+define block HEAP with size = 16K, alignment = 8 { };
+"P2":  place in [from 0x20000000 to 0x2000ffff] {
+          rw, block CSTACK, block HEAP };
+do not initialize { section .noinit };
+initialize by copy { rw };
+
+  Section            Kind        Address    Size  Object
+  -------            ----        -------    ----  ------
+"A0":                                       0xf0
+  .intvec            const    0x00000000    0xf0  startup_ewarm.o [1]
+                            - 0x000000f0    0xf0
+
+"P1":                                     0x1900
+  .text              ro code  0x000000f0   0x37c  rit128x96x4.o [1]
+  .text              ro code  0x0000046c    0x84  ssi.o [4]
+  .text              ro code  0x000004f0   0x104  gpio.o [4]
+  .text              ro code  0x000005f4   0x254  sysctl.o [4]
+  .text              ro code  0x00000848   0x2a4  ustdlib.o [1]
+  .text              ro code  0x00000aec   0x224  measure.o [1]
+  .text              ro code  0x00000d10   0x1f4  main.o [1]
+  .text              ro code  0x00000f04    0x44  no_free_heap0.o [3]
+  .text              ro code  0x00000f48    0x2c  xgetmemchunk.o [3]
+  .rodata            const    0x00000f74   0x1e0  rit128x96x4.o [1]
+  .text              ro code  0x00001154   0x1a2  DblMul.o [5]
+  .rodata            const    0x000012f6     0x2  rit128x96x4.o [1]
+  .text              ro code  0x000012f8   0x178  DblAdd.o [5]
+  .text              ro code  0x00001470    0xd2  DblSub.o [5]
+  .rodata            const    0x00001542     0x2  rit128x96x4.o [1]
+  .text              ro code  0x00001544   0x114  display.o [1]
+  .text              ro code  0x00001658    0x66  ABImemset.o [6]
+  .text              ro code  0x000016be    0x20  strcat.o [3]
+  .text              ro code  0x000016e0    0xa0  warning.o [1]
+  .text              ro code  0x00001780    0x98  compute.o [1]
+  .text              ro code  0x00001818    0x22  S32ToDbl.o [5]
+  .text              ro code  0x0000183c    0x3a  DblToS32.o [5]
+  .rodata            const    0x00001878    0x50  rit128x96x4.o [1]
+  .text              ro code  0x000018c8    0x38  packbits_init_single.o [6]
+  .text              ro code  0x00001900    0x28  data_init.o [6]
+  .iar.init_table    const    0x00001928    0x10  - Linker created -
+  .text              ro code  0x00001938    0x1c  statusMethod.o [1]
+  .text              ro code  0x00001954    0x1a  cmain.o [6]
+  .text              ro code  0x0000196e     0x4  low_level_init.o [3]
+  .text              ro code  0x00001972     0x4  exit.o [3]
+  .text              ro code  0x00001978     0xa  cexit.o [6]
+  .text              ro code  0x00001984    0x14  exit.o [7]
+  .rodata            const    0x00001998    0x14  ustdlib.o [1]
+  .text              ro code  0x000019ac     0xe  startup_ewarm.o [1]
+  .text              ro code  0x000019ba     0xc  cstartup_M.o [6]
+  .rodata            const    0x000019c8     0x8  display.o [1]
+  .rodata            const    0x000019d0     0x8  display.o [1]
+  .rodata            const    0x000019d8     0x8  ustdlib.o [1]
+  .rodata            const    0x000019e0     0x4  rit128x96x4.o [1]
+  .rodata            const    0x000019e4     0x4  rit128x96x4.o [1]
+  .rodata            const    0x000019e8     0x4  ustdlib.o [1]
+  .rodata            const    0x000019ec     0x0  packbits_init_single.o [6]
+  Initializer bytes  const    0x000019ec     0x4  <for P2-1>
+                            - 0x000019f0  0x1900
+
+"P2", part 1 of 2:                          0x32
+  P2-1                        0x20000000    0x32  <Init block>
+    .bss             inited   0x20000000     0x4  main.o [1]
+    .bss             inited   0x20000004     0x4  measure.o [1]
+    .bss             inited   0x20000008     0x4  measure.o [1]
+    .bss             inited   0x2000000c     0x4  measure.o [1]
+    .bss             inited   0x20000010     0x4  measure.o [1]
+    .bss             inited   0x20000014     0x4  measure.o [1]
+    .bss             inited   0x20000018     0x4  measure.o [1]
+    .bss             inited   0x2000001c     0x4  rit128x96x4.o [1]
+    .bss             inited   0x20000020     0x8  rit128x96x4.o [1]
+    .bss             inited   0x20000028     0x4  no_free_heap0.o [3]
+    .bss             inited   0x2000002c     0x4  xgetmemchunk.o [3]
+    .data            inited   0x20000030     0x1  measure.o [1]
+    .data            inited   0x20000031     0x1  measure.o [1]
+                            - 0x20000032    0x32
+
+"P2", part 2 of 2:                        0x4104
+  .noinit            uninit   0x20000034   0x100  startup_ewarm.o [1]
+  HEAP                        0x20000138  0x4000  <Block>
+    HEAP             uninit   0x20000138  0x4000  <Block tail>
+                            - 0x20004138  0x4104
+
+
+*******************************************************************************
+*** INIT TABLE
+***
+
+          Address     Size
+          -------     ----
+Copy/packbits (__iar_packbits_init_single3)
+    1 source range, total size 0x4 (8% of destination):
+          0x000019ec   0x4
+    1 destination range, total size 0x32:
+          0x20000000  0x32
+
+
+
+*******************************************************************************
+*** MODULE SUMMARY
+***
+
+    Module                  ro code  ro data  rw data
+    ------                  -------  -------  -------
+C:\StellarisWare\boards\ek-lm3s8962\project_2\Debug\Obj: [1]
+    compute.o                   152
+    display.o                   276       16
+    main.o                      500                 4
+    measure.o                   548        3       26
+    rit128x96x4.o               892      573       12
+    startup_ewarm.o              14      240      256
+    statusMethod.o               28
+    ustdlib.o                   676       32
+    warning.o                   160
+    -------------------------------------------------
+    Total:                    3 246      864      298
+
+command line: [2]
+    -------------------------------------------------
+    Total:
+
+dl7M_tln.a: [3]
+    exit.o                        4
+    low_level_init.o              4
+    no_free_heap0.o              68                 4
+    strcat.o                     32
+    xgetmemchunk.o               44                 4
+    -------------------------------------------------
+    Total:                      152                 8
+
+driverlib-cm3.a: [4]
+    gpio.o                      260
+    ssi.o                       132
+    sysctl.o                    596
+    -------------------------------------------------
+    Total:                      988
+
+m7M_tl.a: [5]
+    DblAdd.o                    376
+    DblMul.o                    418
+    DblSub.o                    210
+    DblToS32.o                   58
+    S32ToDbl.o                   34
+    -------------------------------------------------
+    Total:                    1 096
+
+rt7M_tl.a: [6]
+    ABImemset.o                 102
+    cexit.o                      10
+    cmain.o                      26
+    cstartup_M.o                 12
+    data_init.o                  40
+    packbits_init_single.o       56
+    -------------------------------------------------
+    Total:                      246
+
+shb_l.a: [7]
+    exit.o                       20
+    -------------------------------------------------
+    Total:                       20
+
+    Gaps                          8        4
+    Linker created                        16   16 384
+-----------------------------------------------------
+    Grand Total:              5 756      884   16 690
+
+
+*******************************************************************************
+*** ENTRY LIST
+***
+
+Entry                      Address   Size  Type      Object
+-----                      -------   ----  ----      ------
+.iar.init_table$$Base   0x00001928          --   Gb  - Linker created -
+.iar.init_table$$Limit  0x00001938          --   Gb  - Linker created -
+?main                   0x00001955         Code  Gb  cmain.o [6]
+Compute                 0x00001781   0x26  Code  Gb  compute.o [1]
+Display                 0x00001545  0x114  Code  Gb  display.o [1]
+FaultISR                0x000019b7    0x2  Code  Lc  startup_ewarm.o [1]
+GPIODirModeSet          0x000004f1   0x28  Code  Gb  gpio.o [4]
+GPIOPadConfigSet        0x00000519   0x98  Code  Gb  gpio.o [4]
+GPIOPinTypeGPIOOutput   0x000005bd    0xa  Code  Gb  gpio.o [4]
+GPIOPinTypeSSI          0x000005e1   0x14  Code  Gb  gpio.o [4]
+GPIOPinWrite            0x000005b1    0x8  Code  Gb  gpio.o [4]
+HEAP$$Base              0x20000138          --   Gb  - Linker created -
+HEAP$$Limit             0x20004138          --   Gb  - Linker created -
+IntDefaultHandler       0x000019b9    0x2  Code  Lc  startup_ewarm.o [1]
+Measure                 0x00000aed   0x24  Code  Gb  measure.o [1]
+NmiSR                   0x000019b5    0x2  Code  Lc  startup_ewarm.o [1]
+RIT128x96x4Clear        0x00000225   0x44  Code  Gb  rit128x96x4.o [1]
+RIT128x96x4Clear::pucCommand1
+                        0x000019e0    0x4  Data  Lc  rit128x96x4.o [1]
+RIT128x96x4Clear::pucCommand2
+                        0x000019e4    0x4  Data  Lc  rit128x96x4.o [1]
+RIT128x96x4Enable       0x0000034b   0x58  Code  Gb  rit128x96x4.o [1]
+RIT128x96x4Init         0x000003a3   0x9a  Code  Gb  rit128x96x4.o [1]
+RIT128x96x4StringDraw   0x00000269   0xe2  Code  Gb  rit128x96x4.o [1]
+RITWriteCommand         0x000000f1   0x9a  Code  Lc  rit128x96x4.o [1]
+RITWriteData            0x0000018b   0x9a  Code  Lc  rit128x96x4.o [1]
+Region$$Table$$Base     0x00001928          --   Gb  - Linker created -
+Region$$Table$$Limit    0x00001938          --   Gb  - Linker created -
+ResetISR                0x000019ad    0x8  Code  Gb  startup_ewarm.o [1]
+SSIBusy                 0x000004e5    0xc  Code  Gb  ssi.o [4]
+SSIConfigSetExpClk      0x0000046d   0x4e  Code  Gb  ssi.o [4]
+SSIDataPut              0x000004d3   0x12  Code  Gb  ssi.o [4]
+SSIDisable              0x000004c7    0xc  Code  Gb  ssi.o [4]
+SSIEnable               0x000004bb    0xc  Code  Gb  ssi.o [4]
+Schedule                0x00000e91   0x14  Code  Gb  main.o [1]
+StatusMethod            0x00001939   0x1c  Code  Gb  statusMethod.o [1]
+SysCtlClockGet          0x0000063f  0x160  Code  Gb  sysctl.o [4]
+SysCtlPeripheralEnable  0x000005f5   0x1a  Code  Gb  sysctl.o [4]
+WarningAlarm            0x000016e1   0x52  Code  Gb  warning.o [1]
+__aeabi_d2iz            0x0000183d         Code  Gb  DblToS32.o [5]
+__aeabi_dadd            0x000012f9         Code  Gb  DblAdd.o [5]
+__aeabi_dmul            0x00001155         Code  Gb  DblMul.o [5]
+__aeabi_i2d             0x00001819         Code  Gb  S32ToDbl.o [5]
+__aeabi_memset          0x00001659         Code  Gb  ABImemset.o [6]
+__cmain                 0x00001955         Code  Gb  cmain.o [6]
+__data_GetMemChunk      0x00000f49   0x2c  Code  Gb  xgetmemchunk.o [3]
+__data_GetMemChunk::start
+                        0x2000002c    0x4  Data  Lc  xgetmemchunk.o [3]
+__exit                  0x00001985   0x14  Code  Gb  exit.o [7]
+__iar_Memset            0x00001659         Code  Gb  ABImemset.o [6]
+__iar_Memset_word       0x00001661         Code  Gb  ABImemset.o [6]
+__iar_dadd              0x00001471         Code  Gb  DblSub.o [5]
+__iar_data_init3        0x00001901   0x28  Code  Gb  data_init.o [6]
+__iar_dsub              0x00001309         Code  Gb  DblAdd.o [5]
+__iar_dsubStart         0x0000131b         Code  Gb  DblAdd.o [5]
+__iar_packbits_init_single3
+                        0x000018c9   0x38  Code  Gb  packbits_init_single.o [6]
+__iar_program_start     0x000019bb         Code  Gb  cstartup_M.o [6]
+__iar_systems$$module {Abs}
+                        0x00000001         Data  Gb  command line/config [2]
+__low_level_init        0x0000196f    0x4  Code  Gb  low_level_init.o [3]
+__no_free_malloc        0x00000f05   0x40  Code  Gb  no_free_heap0.o [3]
+__vector_table          0x00000000   0xf0  Data  Gb  startup_ewarm.o [1]
+_call_main              0x00001961         Code  Gb  cmain.o [6]
+_exit                   0x00001979         Code  Gb  cexit.o [6]
+_main                   0x0000196b         Code  Gb  cmain.o [6]
+blinky                  0x00001733   0x48  Code  Gb  warning.o [1]
+calcTempRaw             0x00000b11   0x92  Code  Gb  measure.o [1]
+calcTempRaw::funcCall   0x2000000c    0x4  Data  Lc  measure.o [1]
+calcTempRaw::isReversed
+                        0x20000030    0x1  Data  Lc  measure.o [1]
+convertToCelsius        0x000017e5   0x24  Code  Gb  compute.o [1]
+delay                   0x00000ea5   0x32  Code  Gb  main.o [1]
+diasComplete            0x20000008    0x4  Data  Lc  measure.o [1]
+diasPressConversion     0x000017b3   0x24  Code  Gb  compute.o [1]
+diasPressRaw            0x00000c05   0x5a  Code  Gb  measure.o [1]
+diasPressRaw::funcCall  0x20000014    0x4  Data  Lc  measure.o [1]
+exit                    0x00001973    0x4  Code  Gb  exit.o [3]
+g_pcHex                 0x000019e8    0x4  Data  Lc  ustdlib.o [1]
+g_pucBuffer             0x20000020    0x8  Data  Lc  rit128x96x4.o [1]
+g_pucFont               0x00000f74  0x1e0  Data  Lc  rit128x96x4.o [1]
+g_pucRIT128x96x4HorizontalInc
+                        0x00001542    0x2  Data  Lc  rit128x96x4.o [1]
+g_pucRIT128x96x4Init    0x00001878   0x50  Data  Lc  rit128x96x4.o [1]
+g_pucRIT128x96x4VerticalInc
+                        0x000012f6    0x2  Data  Lc  rit128x96x4.o [1]
+g_pulRCGCRegs           0x000007d0    0xc  Data  Lc  sysctl.o [4]
+g_pulXtals              0x000007dc   0x6c  Data  Lc  sysctl.o [4]
+g_ulSSIFlags            0x2000001c    0x4  Data  Lc  rit128x96x4.o [1]
+globalCounter           0x20000000    0x4  Data  Gb  main.o [1]
+main                    0x00000d11  0x17e  Code  Gb  main.o [1]
+pulStack                0x20000034  0x100  Data  Lc  startup_ewarm.o [1]
+pulseRateConversion     0x000017d7    0xe  Code  Gb  compute.o [1]
+pulseRateRaw            0x00000c5f   0x92  Code  Gb  measure.o [1]
+pulseRateRaw::funcCall  0x20000018    0x4  Data  Lc  measure.o [1]
+pulseRateRaw::isReversed
+                        0x20000031    0x1  Data  Lc  measure.o [1]
+qs                      0x20000028    0x4  Data  Lc  no_free_heap0.o [3]
+strcat                  0x000016bf   0x20  Code  Gb  strcat.o [3]
+sysComplete             0x20000004    0x4  Data  Lc  measure.o [1]
+sysPressConversion      0x000017a7    0xc  Code  Gb  compute.o [1]
+sysPressRaw             0x00000ba3   0x62  Code  Gb  measure.o [1]
+sysPressRaw::funcCall   0x20000010    0x4  Data  Lc  measure.o [1]
+usprintf                0x00000acf   0x16  Code  Gb  ustdlib.o [1]
+ustrncpy                0x00000849   0x2a  Code  Gb  ustdlib.o [1]
+uvsnprintf              0x00000873  0x25c  Code  Gb  ustdlib.o [1]
+
+
+[1] = C:\StellarisWare\boards\ek-lm3s8962\project_2\Debug\Obj
+[2] = command line
+[3] = dl7M_tln.a
+[4] = driverlib-cm3.a
+[5] = m7M_tl.a
+[6] = rt7M_tl.a
+[7] = shb_l.a
+
+   5 756 bytes of readonly  code memory
+     884 bytes of readonly  data memory
+  16 690 bytes of readwrite data memory
+
+Errors: none
+Warnings: none

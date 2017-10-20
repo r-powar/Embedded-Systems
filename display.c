@@ -5,6 +5,8 @@
 #include "TCB.h"
 #include "display.h"
 #include "GlobalCounter.h"
+#include "utils/ustdlib.h"
+
 void Display(void * voidDisplayDataPtr) {
   if(globalCounter%5 == 0){
     DisplayData * displayDataPtr = voidDisplayDataPtr;
@@ -17,9 +19,9 @@ void Display(void * voidDisplayDataPtr) {
     
     //build the string that will be output on the top line
     char sysTemp [10];
-    sprintf(sysTemp, "%d", *sys);
+    usprintf(sysTemp, "%d", *sys);
     char diasTemp [10];
-    sprintf(diasTemp, "%d", *dias);
+    usprintf(diasTemp, "%d", *dias);
     char * bpUnits = "mm Hg";
     strcat(sysTemp, bpUnits); 
     strcat(sysTemp, "/");
@@ -30,11 +32,11 @@ void Display(void * voidDisplayDataPtr) {
     RIT128x96x4StringDraw(sysTemp, 0, 0, 15);
     //build the string that will be output on the second like
     char valTemp [10];
-    sprintf(valTemp, "%d", *temp);
+    usprintf(valTemp, "%d", *temp);
     char pTemp [10];
-    sprintf(pTemp, "%d", *pRate);
+    usprintf(pTemp, "%d", *pRate);
     char battTemp [10];
-    sprintf(battTemp, "%d", *bStatus);
+    usprintf(battTemp, "%d", *bStatus);
     char * tempUnits = "C";
     char * pUnits = "BPM";
     char * battUnits = "Charge:";

@@ -45,22 +45,24 @@ void main (void)
   RIT128x96x4Init(1000000);
   
   //initialize defaults
-  int tempDefault = 75;
-  int sysDefault = 80;
-  int diaDefault = 80;
-  int prDefault = 50;
+  unsigned int tempDefault = 75;
+  unsigned int sysDefault = 80;
+  unsigned int diaDefault = 80;
+  unsigned int prDefault = 50;
   short int battDefault = 200;
   
   
   //declare the variables that will be used for the tracking in the device
-  int * temperatureRaw = &tempDefault;
-  int * systolicPressRaw = &sysDefault;
-  int * diastolicPressRaw = &diaDefault; 
-  int * pulseRateRaw = & prDefault;
-  int * tempCorrected = (int *)malloc(sizeof(int));
-  int * sysPressCorrected = (int *)malloc(sizeof(int));
-  int * diasPressCorrected = (int *)malloc(sizeof(int));
-  int * prCorrected = (int *)malloc(sizeof(int));
+  unsigned int temperatureRaw[8];
+  temperatureRaw[0] = tempDefault;
+  unsigned int bloodPressRaw[16];
+  bloodPressRaw[0] = sysDefault;
+  bloodPressRaw[8] = diaDefault;
+  unsigned int pulseRateRaw[8];
+  pulseRateRaw[0] = prDefault;
+  unsigned int tempCorrected[8];
+  unsigned int bloodPressCorrected[16];
+  unsigned int prCorrected[8];
   short int * batteryState = & battDefault;
   
   
@@ -69,8 +71,7 @@ void main (void)
   measureDataPtr = (struct MeasureData *) malloc(sizeof(struct MeasureData));
   //TODO: assign measure data locals to point to the values declared at the top
   measureDataPtr->temperatureRawBuf = temperatureRaw;
-  measureDataPtr->bloodPressRawBuf = systolicPressRaw;
-  measureDataPtr->bloodPressRawBuf = diastolicPressRaw;
+  measureDataPtr->bloodPressRawBuf = bloodPressRaw;
   measureDataPtr->pulseRateRawBuf = pulseRateRaw;
     
   //Make a void pointer to datastruct for measure
@@ -89,19 +90,18 @@ void main (void)
   //set measure to the front of the linked list
   TCB * head = TCBMeasure;
   TCB * curr = head;
+  curr->prev = NULL;
   
   //create the TCB for Compute
   ComputeData * computeDataPtr;
   computeDataPtr = (struct ComputeData *) malloc(sizeof(struct ComputeData));
   //assign compute data locals to point to the values declared at the top
   computeDataPtr->temperatureRawBuf = temperatureRaw;
-  computeDataPtr->bloodPressRawBuf = systolicPressRaw;
-  computeDataPtr->bloodPressRawBuf = diastolicPressRaw;
+  computeDataPtr->bloodPressRawBuf = bloodPressRaw;
   computeDataPtr->pulseRateRawBuf = pulseRateRaw;
   
   computeDataPtr->tempCorrectedBuf = tempCorrected;
-  computeDataPtr->bloodPressRawBuf = sysPressCorrected;
-  computeDataPtr->bloodPressRawBuf = diasPressCorrected;
+  computeDataPtr->bloodPressCorrectedBuf = bloodPressCorrected;
   computeDataPtr->prCorrectedBuf = prCorrected;
   //Make a void pointer to datastruct for Compute
   void * voidComputeDataPtr = computeDataPtr;
@@ -125,8 +125,7 @@ void main (void)
   displayDataPtr = (struct DisplayData *) malloc(sizeof(struct DisplayData));
   //TODO: assign measure data locals to point to the values declared at the top
   displayDataPtr->tempCorrectedBuf = tempCorrected;
-  displayDataPtr->bloodPressCorrectedBuf = sysPressCorrected;
-  displayDataPtr->bloodPressCorrectedBuf = diasPressCorrected;
+  displayDataPtr->bloodPressCorrectedBuf = bloodPressCorrected;
   displayDataPtr->prCorrectedBuf = prCorrected;
   displayDataPtr->batteryState = batteryState;
   //Make a void pointer to datastruct for display
@@ -152,8 +151,7 @@ void main (void)
     malloc(sizeof(struct WarningAlarmData));
   //TODO: assign measure data locals to point to the values declared at the top
   warningAlarmDataPtr->temperatureRawBuf = temperatureRaw;
-  warningAlarmDataPtr->bloodPressRawBuf = systolicPressRaw;
-  warningAlarmDataPtr->bloodPressRawBuf = diastolicPressRaw;
+  warningAlarmDataPtr->bloodPressRawBuf = bloodPressRaw;
   warningAlarmDataPtr->pulseRateRawBuf = pulseRateRaw;
   warningAlarmDataPtr->batteryState = batteryState;
   //Make a void pointer to datastruct for WarningAlarm
@@ -196,8 +194,7 @@ void main (void)
   curr = curr->next;
   
   //create the TCB for Scheduler
-//  SchedulerData * schedulerDataPtr;
-//  schedulerDataPtr = (struct SchedulerData *) malloc(sizeof(struct SchedulerData));
+
   //assign Scheduler data locals to point to the values declared at the top
   //Make a void pointer to datastruct for scheduler
   void * voidSchedulerPtr;
@@ -211,14 +208,16 @@ void main (void)
   //fill the TCB with revelvent method and data pointers
   TCBScheduler->myTask = schedulerPtr;
   TCBScheduler->taskDataPtr = voidSchedulerPtr;
-
+  
+  curr->next = NULL;
   curr = head;
   while (1){
-    TCBScheduler->myTask(TCBScheduler->taskDataPtr);
-    while (curr->next != NULL) {   
+    while (curr != NULL) {   
       curr->myTask(curr->taskDataPtr);
       curr=curr->next;
     }
+    TCBScheduler->myTask(TCBScheduler->taskDataPtr);
+    curr = head;
   }
 }
 void Schedule(void * voidSchedulerDataPtr) {
@@ -227,19 +226,19 @@ void Schedule(void * voidSchedulerDataPtr) {
   globalCounter++;
 }
 
-void initializeVariable(int * tempRaw, int *  sysRaw, int *  diaRaw,
-                        int *  prRaw, short int *  battState) {
-  int tempDefault = 75;
-  int sysDefault = 80;
-  int diaDefault = 80;
-  int prDefault = 50;
-  short int battDefault = 200;
-  tempRaw = &tempDefault;
-  sysRaw = &sysDefault;
-  diaRaw = &diaDefault;
-  prRaw = &prDefault;
-  battState = &battDefault;
-}
+//void initializeVariable(int * tempRaw, int *  sysRaw, int *  diaRaw,
+//                        int *  prRaw, short int *  battState) {
+//  int tempDefault = 75;
+//  int sysDefault = 80;
+//  int diaDefault = 80;
+//  int prDefault = 50;
+//  short int battDefault = 200;
+//  tempRaw = &tempDefault;
+//  sysRaw = &sysDefault;
+//  diaRaw = &diaDefault;
+//  prRaw = &prDefault;
+//  battState = &battDefault;
+//}
 void delay(unsigned long aValue){
   volatile unsigned long i = 0;
 

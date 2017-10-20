@@ -50,7 +50,6 @@ void main (void)
   int diaDefault = 80;
   int prDefault = 50;
   short int battDefault = 200;
-  const int numTCB = 6;
   
   
   //declare the variables that will be used for the tracking in the device
@@ -89,6 +88,7 @@ void main (void)
   
   //set measure to the front of the linked list
   TCB * head = TCBMeasure;
+  TCB * curr = head;
   
   //create the TCB for Compute
   ComputeData * computeDataPtr;
@@ -116,6 +116,9 @@ void main (void)
   TCBCompute->myTask = computePtr;
   TCBCompute->taskDataPtr = voidComputeDataPtr;
   
+  TCBCompute->prev = curr;
+  curr->next = TCBCompute;
+  curr = curr->next;
   
   //create the TCB for Display
   DisplayData * displayDataPtr;
@@ -139,6 +142,10 @@ void main (void)
   TCBDisplay->myTask = displayPtr;
   TCBDisplay->taskDataPtr = voidDisplayDataPtr;
   
+  TCBDisplay->prev = curr;
+  curr->next = TCBDisplay;
+  curr = curr->next;
+  
   //create the TCB for WarningAlarm
   WarningAlarmData * warningAlarmDataPtr;
   warningAlarmDataPtr = (struct WarningAlarmData *) 
@@ -149,11 +156,6 @@ void main (void)
   warningAlarmDataPtr->bloodPressRawBuf = diastolicPressRaw;
   warningAlarmDataPtr->pulseRateRawBuf = pulseRateRaw;
   warningAlarmDataPtr->batteryState = batteryState;
-//  int * temperatureRaw;
-//  int * systolicPressRaw;
-//  int * diastolicPressRaw;
-//  int * pulseRateRaw;
-//  short int * batteryState;
   //Make a void pointer to datastruct for WarningAlarm
   void * voidWarningAlarmDataPtr = warningAlarmDataPtr;
   //instantiate Task Control Block for WarningAlarm
@@ -166,6 +168,10 @@ void main (void)
   //fill the TCB with revelvent method and data pointers
   TCBWarningAlarm->myTask = warningAlarmPtr;
   TCBWarningAlarm->taskDataPtr = voidWarningAlarmDataPtr;
+  
+  TCBWarningAlarm->prev = curr;
+  curr->next = TCBWarningAlarm;
+  curr = curr->next;
   
   //create the TCB for StatusMethod
   Status * statusPtr;
@@ -185,6 +191,10 @@ void main (void)
   TCBStatusMethod->myTask = statusMethodPtr;
   TCBStatusMethod->taskDataPtr = voidStatusPtr;
   
+  TCBStatusMethod->prev = curr;
+  curr->next = TCBStatusMethod;
+  curr = curr->next;
+  
   //create the TCB for Scheduler
 //  SchedulerData * schedulerDataPtr;
 //  schedulerDataPtr = (struct SchedulerData *) malloc(sizeof(struct SchedulerData));
@@ -201,15 +211,13 @@ void main (void)
   //fill the TCB with revelvent method and data pointers
   TCBScheduler->myTask = schedulerPtr;
   TCBScheduler->taskDataPtr = voidSchedulerPtr;
-  
-  //Add the task to the task queue
-  //TODO: add schedule TCB once it is created
-  TCB * myTasks [] = {TCBMeasure, TCBCompute, TCBDisplay,
-    TCBWarningAlarm, TCBStatusMethod, TCBScheduler};
-  
+
+  curr = head;
   while (1){
-    for (volatile int i = 0; i <numTCB; i++){
-     myTasks[i]->myTask(myTasks[i]->taskDataPtr); 
+    TCBScheduler->myTask(TCBScheduler->taskDataPtr);
+    while (curr->next != NULL) {   
+      curr->myTask(curr->taskDataPtr);
+      curr=curr->next;
     }
   }
 }

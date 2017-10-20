@@ -20,10 +20,10 @@ void Compute(void * voidComputeDataPtr) {
   if(globalCounter%5 == 0){
     ComputeData * computeDataPtr = voidComputeDataPtr;
     //perform conversions and corrections
-    convertToCelsius(computeDataPtr, computeDataPtr->temperatureRaw);
-    diasPressConversion(computeDataPtr, computeDataPtr->diastolicPressRaw);
-    sysPressConversion(computeDataPtr, computeDataPtr->systolicPressRaw);
-    pulseRateConversion(computeDataPtr, computeDataPtr->pulseRateRaw);  
+    convertToCelsius(computeDataPtr, computeDataPtr->temperatureRawBuf);
+    diasPressConversion(computeDataPtr, computeDataPtr->bloodPressRawBuf);
+    sysPressConversion(computeDataPtr, computeDataPtr->bloodPressRawBuf+8);
+    pulseRateConversion(computeDataPtr, computeDataPtr->pulseRateRawBuf);  
   }
   
 }
@@ -31,24 +31,27 @@ void Compute(void * voidComputeDataPtr) {
 void sysPressConversion(ComputeData *compute, int *sysRaw)
 {
   int temp = SYSTOLIC_BASE + (SYSTOLIC_RATIO * *sysRaw);
-  *compute->sysPressCorrected = temp;
+  //TODO: update compute to insert into buffer
+  *compute->bloodPressCorrectedBuf = temp;
 }
 
 void diasPressConversion(ComputeData *compute, int *diasRaw)
 {
   int temp = DIASTOLIC_BASE + (DIASTOLIC_RATIO * *diasRaw);
-  *(compute->diasPressCorrected) = temp;
+  //TODO: update compute to insert into buffer
+  *(compute->bloodPressCorrectedBuf+8) = temp;
 }
 
 void pulseRateConversion(ComputeData *compute, int *pulseRaw)
 {
   int temp = PULSE_RATE_BASE + (PULSE_RATE_RATIO * *pulseRaw);
-  *(compute->prCorrected) = temp;
+  //TODO: update compute to insert into buffer
+  *(compute->prCorrectedBuf) = temp;
 }
 
 void convertToCelsius(ComputeData *compute, int *tempRaw)
 {
-  //TODO: This needs to be made into a double or float
+  //TODO: update compute to insert into buffer
   int temp = (CELSIUS_BASE + (CELSIUS_RATIO * *tempRaw));
-  *(compute->tempCorrected) = temp;
+  *(compute->tempCorrectedBuf) = temp;
 }

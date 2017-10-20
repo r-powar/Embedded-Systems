@@ -11,10 +11,11 @@ void Display(void * voidDisplayDataPtr) {
   if(globalCounter%5 == 0){
     DisplayData * displayDataPtr = voidDisplayDataPtr;
     
-    int * temp = displayDataPtr->tempCorrected;
-    int * sys = displayDataPtr->sysPressCorrected;
-    int * dias = displayDataPtr->diasPressCorrected;
-    int * pRate = displayDataPtr->prCorrected;
+    //Updated to pull the most recent data from the measurement buffers
+    int * temp = displayDataPtr->tempCorrectedBuf;
+    int * sys = displayDataPtr->bloodPressCorrectedBuf;
+    int * dias = displayDataPtr->bloodPressCorrectedBuf+8;
+    int * pRate = displayDataPtr->prCorrectedBuf;
     short int * bStatus = displayDataPtr->batteryState;
     
     //build the string that will be output on the top line

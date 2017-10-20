@@ -7,20 +7,20 @@ struct MeasureData{
 typedef struct MeasureData MeasureData;
 
 struct ComputeData{
-  unsigned int * temperatureRawBuff;
+  unsigned int * temperatureRawBuf;
   unsigned int * bloodPressRawBuf;
   unsigned int * pulseRateRawBuf;
-  unsigned char * tempCorrectedBuf;
-  unsigned char * bloodPressCorrectedBuf;
-  unsigned char * prCorrectedBuf;
+  unsigned int * tempCorrectedBuf;
+  unsigned int * bloodPressCorrectedBuf;
+  unsigned int * prCorrectedBuf;
   unsigned short int * measurementSelection;
 };
 typedef struct ComputeData ComputeData;
 
 struct DisplayData{
-  unsigned char * tempCorrectedBuf;
-  unsigned char * bloodPressCorrectedBuf;
-  unsigned char * prCorrectedBuf;
+  unsigned int * tempCorrectedBuf;
+  unsigned int * bloodPressCorrectedBuf;
+  unsigned int * prCorrectedBuf;
   short int * batteryState;
   
   unsigned short int * mode;
@@ -29,9 +29,9 @@ typedef struct DisplayData DisplayData;
 
 
 struct WarningAlarmData{
-  unsigned char * temperatureRawBuf;
-  unsigned char * bloodPressRawBuf;
-  unsigned char * pulseRateRawBuf;
+  unsigned int * temperatureRawBuf;
+  unsigned int * bloodPressRawBuf;
+  unsigned int * pulseRateRawBuf;
   short int * batteryState;
 };
 typedef struct WarningAlarmData WarningAlarmData;
@@ -52,9 +52,9 @@ struct KeypadData{
 typedef struct KeypadData KeypadData;
 
 struct CommunicationsData{
-  unsigned char * tempCorrectedBuf;
-  unsigned char * bloodPressCorrectedBuf;
-  unsigned char * prCorrectedBuf;
+  unsigned int * tempCorrectedBuf;
+  unsigned int * bloodPressCorrectedBuf;
+  unsigned int * prCorrectedBuf;
 };
 typedef struct CommunicationsData CommunicationsData;
 

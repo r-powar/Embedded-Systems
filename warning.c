@@ -29,20 +29,20 @@ void WarningAlarm(void * voidWarningAlarmDataPtr) {
   int alarmDelay;
   bool alarmOn = false;
   
-  if (*warningAlarmDataPtr->pulseRateRaw >= HIGH_PULSE_RAW ||
-      *warningAlarmDataPtr->pulseRateRaw <= LOW_PULSE_RAW)
+  if (*warningAlarmDataPtr->pulseRateRawBuf >= HIGH_PULSE_RAW ||
+      *warningAlarmDataPtr->pulseRateRawBuf <= LOW_PULSE_RAW)
   {
     alarmOn = true;
     alarmDelay = PULSE_DELAY;
   }
-  if (*warningAlarmDataPtr->temperatureRaw >= HIGH_TEMP_RAW ||
-      *warningAlarmDataPtr->temperatureRaw <= LOW_TEMP_RAW)
+  if (*warningAlarmDataPtr->temperatureRawBuf >= HIGH_TEMP_RAW ||
+      *warningAlarmDataPtr->temperatureRawBuf <= LOW_TEMP_RAW)
   {
     alarmOn = true;
     alarmDelay = TEMP_DELAY;
   }
-  if (*warningAlarmDataPtr->systolicPressRaw >= SYSTOLIC_RAW ||
-      *warningAlarmDataPtr->diastolicPressRaw >= DIASTOLIC_RAW)
+  if (*warningAlarmDataPtr->bloodPressRawBuf >= SYSTOLIC_RAW ||
+      *warningAlarmDataPtr->bloodPressRawBuf+8 >= DIASTOLIC_RAW)
   {
     alarmOn = true;
     alarmDelay = BP_DELAY;

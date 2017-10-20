@@ -4,7 +4,7 @@
 #include "BoolInclude.h"
 #include "TCB.h"
 #include "inc/lm3s8962.h"
-#include "GlobalCounter.c"
+#include "GlobalCounter.h"
 
 //declare the method that will initalize the variable to default values
 void initializeVariable(int * tempRaw, int *  sysRaw, int *  diaRaw,
@@ -63,22 +63,16 @@ void main (void)
   int * diasPressCorrected = (int *)malloc(sizeof(int));
   int * prCorrected = (int *)malloc(sizeof(int));
   short int * batteryState = & battDefault;
-
-
-  
-//  initializeVariable(temperatureRaw, systolicPressRaw, diastolicPressRaw, 
-//    pulseRateRaw, batteryState);
-  
   
   
   //create the TCB for Measure
   MeasureData * measureDataPtr;
   measureDataPtr = (struct MeasureData *) malloc(sizeof(struct MeasureData));
   //TODO: assign measure data locals to point to the values declared at the top
-  measureDataPtr->temperatureRaw = temperatureRaw;
-  measureDataPtr->systolicPressRaw = systolicPressRaw;
-  measureDataPtr->diastolicPressRaw = diastolicPressRaw;
-  measureDataPtr->pulseRateRaw = pulseRateRaw;
+  measureDataPtr->temperatureRawBuf = temperatureRaw;
+  measureDataPtr->bloodPressRawBuf = systolicPressRaw;
+  measureDataPtr->bloodPressRawBuf = diastolicPressRaw;
+  measureDataPtr->pulseRateRawBuf = pulseRateRaw;
     
   //Make a void pointer to datastruct for measure
   void * voidMeasureDataPtr = measureDataPtr;
@@ -93,20 +87,22 @@ void main (void)
   TCBMeasure->myTask = measurePtr;
   TCBMeasure->taskDataPtr = voidMeasureDataPtr;
   
+  //set measure to the front of the linked list
+  TCB * head = TCBMeasure;
   
   //create the TCB for Compute
   ComputeData * computeDataPtr;
   computeDataPtr = (struct ComputeData *) malloc(sizeof(struct ComputeData));
   //assign compute data locals to point to the values declared at the top
-  computeDataPtr->temperatureRaw = temperatureRaw;
-  computeDataPtr->systolicPressRaw = systolicPressRaw;
-  computeDataPtr->diastolicPressRaw = diastolicPressRaw;
-  computeDataPtr->pulseRateRaw = pulseRateRaw;
+  computeDataPtr->temperatureRawBuf = temperatureRaw;
+  computeDataPtr->bloodPressRawBuf = systolicPressRaw;
+  computeDataPtr->bloodPressRawBuf = diastolicPressRaw;
+  computeDataPtr->pulseRateRawBuf = pulseRateRaw;
   
-  computeDataPtr->tempCorrected = tempCorrected;
-  computeDataPtr->sysPressCorrected = sysPressCorrected;
-  computeDataPtr->diasPressCorrected = diasPressCorrected;
-  computeDataPtr->prCorrected = prCorrected;
+  computeDataPtr->tempCorrectedBuf = tempCorrected;
+  computeDataPtr->bloodPressRawBuf = sysPressCorrected;
+  computeDataPtr->bloodPressRawBuf = diasPressCorrected;
+  computeDataPtr->prCorrectedBuf = prCorrected;
   //Make a void pointer to datastruct for Compute
   void * voidComputeDataPtr = computeDataPtr;
   //instantiate Task Control Block for Compute
@@ -125,10 +121,10 @@ void main (void)
   DisplayData * displayDataPtr;
   displayDataPtr = (struct DisplayData *) malloc(sizeof(struct DisplayData));
   //TODO: assign measure data locals to point to the values declared at the top
-  displayDataPtr->tempCorrected = tempCorrected;
-  displayDataPtr->sysPressCorrected = sysPressCorrected;
-  displayDataPtr->diasPressCorrected = diasPressCorrected;
-  displayDataPtr->prCorrected = prCorrected;
+  displayDataPtr->tempCorrectedBuf = tempCorrected;
+  displayDataPtr->bloodPressCorrectedBuf = sysPressCorrected;
+  displayDataPtr->bloodPressCorrectedBuf = diasPressCorrected;
+  displayDataPtr->prCorrectedBuf = prCorrected;
   displayDataPtr->batteryState = batteryState;
   //Make a void pointer to datastruct for display
   void * voidDisplayDataPtr = displayDataPtr;
@@ -148,10 +144,10 @@ void main (void)
   warningAlarmDataPtr = (struct WarningAlarmData *) 
     malloc(sizeof(struct WarningAlarmData));
   //TODO: assign measure data locals to point to the values declared at the top
-  warningAlarmDataPtr->temperatureRaw = temperatureRaw;
-  warningAlarmDataPtr->systolicPressRaw = systolicPressRaw;
-  warningAlarmDataPtr->diastolicPressRaw = diastolicPressRaw;
-  warningAlarmDataPtr->pulseRateRaw = pulseRateRaw;
+  warningAlarmDataPtr->temperatureRawBuf = temperatureRaw;
+  warningAlarmDataPtr->bloodPressRawBuf = systolicPressRaw;
+  warningAlarmDataPtr->bloodPressRawBuf = diastolicPressRaw;
+  warningAlarmDataPtr->pulseRateRawBuf = pulseRateRaw;
   warningAlarmDataPtr->batteryState = batteryState;
 //  int * temperatureRaw;
 //  int * systolicPressRaw;

@@ -16,10 +16,10 @@ void Measure(void * voidMeasureDataPtr) {
   if(globalCounter%5 == 0){
     
     MeasureData * measureDataPtr = voidMeasureDataPtr;
-    int * tempRaw = measureDataPtr->temperatureRaw;
-    int * sysPRaw = measureDataPtr->systolicPressRaw;
-    int * diasPRaw = measureDataPtr->diastolicPressRaw;
-    int * pulseRRaw = measureDataPtr->pulseRateRaw;
+    int * tempRaw = measureDataPtr->temperatureRawBuf;
+    int * sysPRaw = measureDataPtr->bloodPressRawBuf;
+    int * diasPRaw = measureDataPtr->bloodPressRawBuf+8;
+    int * pulseRRaw = measureDataPtr->pulseRateRawBuf;
     calcTempRaw(tempRaw);
     sysPressRaw(sysPRaw);
     diasPressRaw(diasPRaw);

@@ -1,6 +1,8 @@
 struct MyStruct{
   void (*myTask)(void*);
   void* taskDataPtr;
+  struct MyStruct *next;
+  struct MyStruct *prev;
 };
 
 //TCB struct decl that hold method ref and data struct ref

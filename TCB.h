@@ -18,3 +18,7 @@ void Display(void * voidDisplayDataPtr);
 void WarningAlarm(void * voidWarningAlarmDataPtr);
 //declare the method that will decrement battery life
 void StatusMethod(void * voidStatusPtr);
+//declare KeyPad Method
+void Keypad(void * voidKeypadDataPtr);
+//declare Communications Method
+void Communications(void * voidCommunicationsDataPtr);

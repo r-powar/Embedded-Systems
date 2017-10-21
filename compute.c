@@ -28,28 +28,28 @@ void Compute(void * voidComputeDataPtr) {
   
 }
 
-void sysPressConversion(ComputeData *compute, int *sysRaw)
+void sysPressConversion(ComputeData *compute, unsigned int *sysRaw)
 {
   int temp = SYSTOLIC_BASE + (SYSTOLIC_RATIO * *sysRaw);
   //TODO: update compute to insert into buffer
   *compute->bloodPressCorrectedBuf = temp;
 }
 
-void diasPressConversion(ComputeData *compute, int *diasRaw)
+void diasPressConversion(ComputeData *compute, unsigned int *diasRaw)
 {
   int temp = DIASTOLIC_BASE + (DIASTOLIC_RATIO * *diasRaw);
   //TODO: update compute to insert into buffer
   *(compute->bloodPressCorrectedBuf+8) = temp;
 }
 
-void pulseRateConversion(ComputeData *compute, int *pulseRaw)
+void pulseRateConversion(ComputeData *compute, unsigned int *pulseRaw)
 {
   int temp = PULSE_RATE_BASE + (PULSE_RATE_RATIO * *pulseRaw);
   //TODO: update compute to insert into buffer
   *(compute->prCorrectedBuf) = temp;
 }
 
-void convertToCelsius(ComputeData *compute, int *tempRaw)
+void convertToCelsius(ComputeData *compute, unsigned int *tempRaw)
 {
   //TODO: update compute to insert into buffer
   int temp = (CELSIUS_BASE + (CELSIUS_RATIO * *tempRaw));

@@ -54,8 +54,17 @@ void main (void)
   unsigned int diaDefault = 80;
   unsigned int prDefault = 50;
   short int battDefault = 200;
+<<<<<<< HEAD
   
  
+=======
+  unsigned short int modeDefault = 0;
+  unsigned short int measureSelectDefault = 0;
+  unsigned short int scrollDefault = 0;
+  unsigned short int selectDefault = 0;
+  unsigned short int alarmAcknowledgeDefault = 0;
+    
+>>>>>>> f2a4caf1c5fe5b2edf0648f1d86abaeb92f1aca9
   //declare the variables that will be used for the tracking in the device
   unsigned int temperatureRaw[8];
   temperatureRaw[0] = 75;
@@ -64,11 +73,23 @@ void main (void)
   bloodPressRaw[8] = diaDefault;
   unsigned int pulseRateRaw[8];
   pulseRateRaw[0] = prDefault;
+<<<<<<< HEAD
   unsigned int tempCorrected[8] = {0, 0, 0, 0, 0, 0, 0, 0};
   unsigned int bloodPressCorrected[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   unsigned int prCorrected[8] = {0, 0, 0, 0, 0, 0, 0, 0};
   short int * batteryState = & battDefault;
   
+=======
+  unsigned int tempCorrected[8];
+  unsigned int bloodPressCorrected[16];
+  unsigned int prCorrected[8];
+  short int * batteryState = &battDefault;
+  unsigned short int * mode = &modeDefault;
+  unsigned short int * measureSelect = &measureSelectDefault;
+  unsigned short int * scroll = &scrollDefault;
+  unsigned short int * select = &selectDefault;
+  unsigned short int * alarmAcknowledge = &alarmAcknowledgeDefault;
+>>>>>>> f2a4caf1c5fe5b2edf0648f1d86abaeb92f1aca9
   
   //create the TCB for Measure
   MeasureData * measureDataPtr;
@@ -128,9 +149,38 @@ void main (void)
   TCBCompute->prev = curr;
   curr->next = TCBCompute;
   curr = curr->next;
+<<<<<<< HEAD
   RIT128x96x4StringDraw("Hello3", 0, 15, 15);
 
 
+=======
+  
+  //create the TCB for Keypad
+  KeypadData * keypadDataPtr;
+  keypadDataPtr = (struct KeypadData *) malloc(sizeof(struct KeypadData));
+  keypadDataPtr->mode = mode;
+  keypadDataPtr->measurementSelection = measureSelect;
+  keypadDataPtr->scroll = scroll;
+  keypadDataPtr->select = select;
+  keypadDataPtr->alarmAcknowledge = alarmAcknowledge;    
+  //Make a void pointer to datastruct for Keypad
+  void * voidKeypadDataPtr = keypadDataPtr;
+  //instantiate Task Control Block for Keypad
+  TCB * TCBKeypad;
+  TCBKeypad = (TCB *) malloc(sizeof(TCB));
+  //Create the pointer to the Keypad
+  void (* keypadPtr)(void*);
+  //assign pointer to function Keypad
+  keypadPtr = Keypad;
+  //fill the TCB with revelvent method and data pointers
+  TCBKeypad->myTask = keypadPtr;
+  TCBKeypad->taskDataPtr = voidKeypadDataPtr;
+  
+  TCBKeypad->prev = curr;
+  curr->next = TCBKeypad;
+  curr = curr->next;
+  
+>>>>>>> f2a4caf1c5fe5b2edf0648f1d86abaeb92f1aca9
   //create the TCB for Display
   DisplayData * displayDataPtr;
   displayDataPtr = (struct DisplayData *) malloc(sizeof(struct DisplayData));
@@ -180,6 +230,31 @@ void main (void)
   
   TCBWarningAlarm->prev = curr;
   curr->next = TCBWarningAlarm;
+  curr = curr->next;
+  
+  //create the TCB for Communications
+  CommunicationsData * communicationsDataPtr;
+  communicationsDataPtr = (struct CommunicationsData *) 
+    malloc(sizeof(struct CommunicationsData));
+  //TODO: assign measure data locals to point to the values declared at the top
+  communicationsDataPtr->tempCorrectedBuf = tempCorrected;
+  communicationsDataPtr->bloodPressCorrectedBuf = bloodPressCorrected;
+  communicationsDataPtr->prCorrectedBuf = prCorrected;
+  //Make a void pointer to datastruct for Communications
+  void * voidCommunicationsDataPtr = communicationsDataPtr;
+  //instantiate Task Control Block for Communications
+  TCB * TCBCommunications;
+  TCBCommunications = (TCB *) malloc(sizeof(TCB));
+  //Create the pointer to the Communications method
+  void (* communicationsPtr)(void*);
+  //assign pointer to function WarningAlarm
+  communicationsPtr = Communications;
+  //fill the TCB with revelvent method and data pointers
+  TCBCommunications->myTask = communicationsPtr;
+  TCBCommunications->taskDataPtr = voidCommunicationsDataPtr;
+  
+  TCBCommunications->prev = curr;
+  curr->next = TCBCommunications;
   curr = curr->next;
   
   //create the TCB for StatusMethod
@@ -236,6 +311,12 @@ void Schedule(void * voidSchedulerDataPtr) {
   //SchedulerData * schedulerDataPtr = schedulerDataPtr;
   delay(10);
   globalCounter++;
+}
+void Keypad(void * voidKeypadDataPtr) {
+  
+}
+void Communications (void * voidCommunicationsDataPtr) { 
+  
 }
 
 //void initializeVariable(int * tempRaw, int *  sysRaw, int *  diaRaw,

@@ -16,10 +16,10 @@ void Measure(void * voidMeasureDataPtr) {
   if(globalCounter%5 == 0){
     
     MeasureData * measureDataPtr = voidMeasureDataPtr;
-    int * tempRaw = measureDataPtr->temperatureRawBuf;
-    int * sysPRaw = measureDataPtr->bloodPressRawBuf;
-    int * diasPRaw = measureDataPtr->bloodPressRawBuf+8;
-    int * pulseRRaw = measureDataPtr->pulseRateRawBuf;
+    unsigned int * tempRaw = measureDataPtr->temperatureRawBuf;
+    unsigned int * sysPRaw = measureDataPtr->bloodPressRawBuf;
+    unsigned int * diasPRaw = measureDataPtr->bloodPressRawBuf+8;
+    unsigned int * pulseRRaw = measureDataPtr->pulseRateRawBuf;
     calcTempRaw(tempRaw);
     sysPressRaw(sysPRaw);
     diasPressRaw(diasPRaw);
@@ -28,7 +28,7 @@ void Measure(void * voidMeasureDataPtr) {
   
 }
 
-void calcTempRaw(int *tempRaw){
+void calcTempRaw(unsigned int *tempRaw){
   static bool isReversed = true;
   static int funcCall = 0;
   
@@ -50,7 +50,7 @@ void calcTempRaw(int *tempRaw){
   funcCall++;
 }
 
-void sysPressRaw(int * sysRaw){
+void sysPressRaw(unsigned int * sysRaw){
   static int funcCall = 0;
   if(diasComplete && sysComplete){
     diasComplete = 0;
@@ -72,7 +72,7 @@ void sysPressRaw(int * sysRaw){
   funcCall++;
 }
 
-void diasPressRaw(int *diasRaw){
+void diasPressRaw(unsigned int *diasRaw){
   static int funcCall = 0;
   if(*diasRaw < 40){
     diasComplete = 1;
@@ -92,7 +92,7 @@ void diasPressRaw(int *diasRaw){
   funcCall++;
 }
 
-void pulseRateRaw(int *prRaw){
+void pulseRateRaw(unsigned int *prRaw){
   static bool isReversed = true;
   static int funcCall = 0;
   

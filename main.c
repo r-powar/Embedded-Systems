@@ -23,6 +23,7 @@ void Schedule(void * voidSchedulerDataPtr);
 typedef struct DataStruct DataStruct;
 void main (void)
 {
+  
   volatile unsigned long ulLoop;
 
   //
@@ -44,6 +45,9 @@ void main (void)
   
   RIT128x96x4Init(1000000);
   
+  RIT128x96x4StringDraw("Hello", 0, 15, 15);
+
+ 
   //initialize defaults
   unsigned int tempDefault = 75;
   unsigned int sysDefault = 80;
@@ -51,18 +55,18 @@ void main (void)
   unsigned int prDefault = 50;
   short int battDefault = 200;
   
-  
+ 
   //declare the variables that will be used for the tracking in the device
   unsigned int temperatureRaw[8];
-  temperatureRaw[0] = tempDefault;
+  temperatureRaw[0] = 75;
   unsigned int bloodPressRaw[16];
   bloodPressRaw[0] = sysDefault;
   bloodPressRaw[8] = diaDefault;
   unsigned int pulseRateRaw[8];
   pulseRateRaw[0] = prDefault;
-  unsigned int tempCorrected[8];
-  unsigned int bloodPressCorrected[16];
-  unsigned int prCorrected[8];
+  unsigned int tempCorrected[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+  unsigned int bloodPressCorrected[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  unsigned int prCorrected[8] = {0, 0, 0, 0, 0, 0, 0, 0};
   short int * batteryState = & battDefault;
   
   
@@ -91,10 +95,12 @@ void main (void)
   TCB * head = TCBMeasure;
   TCB * curr = head;
   curr->prev = NULL;
-  
+  RIT128x96x4StringDraw("Hello2", 0, 15, 15);
+ 
   //create the TCB for Compute
   ComputeData * computeDataPtr;
   computeDataPtr = (struct ComputeData *) malloc(sizeof(struct ComputeData));
+  
   //assign compute data locals to point to the values declared at the top
   computeDataPtr->temperatureRawBuf = temperatureRaw;
   computeDataPtr->bloodPressRawBuf = bloodPressRaw;
@@ -103,6 +109,9 @@ void main (void)
   computeDataPtr->tempCorrectedBuf = tempCorrected;
   computeDataPtr->bloodPressCorrectedBuf = bloodPressCorrected;
   computeDataPtr->prCorrectedBuf = prCorrected;
+  RIT128x96x4StringDraw("Hello3", 0, 15, 15);
+
+  /*
   //Make a void pointer to datastruct for Compute
   void * voidComputeDataPtr = computeDataPtr;
   //instantiate Task Control Block for Compute
@@ -119,7 +128,9 @@ void main (void)
   TCBCompute->prev = curr;
   curr->next = TCBCompute;
   curr = curr->next;
-  
+  RIT128x96x4StringDraw("Hello3", 0, 15, 15);
+
+
   //create the TCB for Display
   DisplayData * displayDataPtr;
   displayDataPtr = (struct DisplayData *) malloc(sizeof(struct DisplayData));
@@ -219,6 +230,7 @@ void main (void)
     TCBScheduler->myTask(TCBScheduler->taskDataPtr);
     curr = head;
   }
+  */
 }
 void Schedule(void * voidSchedulerDataPtr) {
   //SchedulerData * schedulerDataPtr = schedulerDataPtr;

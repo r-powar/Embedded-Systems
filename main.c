@@ -1,10 +1,13 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 #include "ProjectStructs.h"
-#include "BoolInclude.h"
 #include "TCB.h"
 #include "inc/lm3s8962.h"
 #include "GlobalCounter.h"
+#include "inc/hw_types.h"
+#include "driverlib/debug.h"
+#include "driverlib/sysctl.h"
 
 //declare the method that will initalize the variable to default values
 void initializeVariable(int * tempRaw, int *  sysRaw, int *  diaRaw,
@@ -23,9 +26,16 @@ void Schedule(void * voidSchedulerDataPtr);
 typedef struct DataStruct DataStruct;
 void main (void)
 {
-  
-  volatile unsigned long ulLoop;
+   volatile unsigned long ulLoop;
+      //
+    // Set the clocking to run directly from the crystal.
+    //
+   SysCtlClockSet(SYSCTL_SYSDIV_1 | SYSCTL_USE_OSC | SYSCTL_OSC_MAIN | SYSCTL_XTAL_8MHZ);
 
+  
+   RIT128x96x4Init(1000000);
+
+   /*
   //
   // Enable the GPIO port that is used for the on-board LED.
   //
@@ -42,62 +52,47 @@ void main (void)
   //
   GPIO_PORTF_DIR_R = 0x01;
   GPIO_PORTF_DEN_R = 0x01;
-  
-  RIT128x96x4Init(1000000);
-  
-  RIT128x96x4StringDraw("Hello", 0, 15, 15);
-
- 
+  */
   //initialize defaults
   unsigned int tempDefault = 75;
   unsigned int sysDefault = 80;
   unsigned int diaDefault = 80;
   unsigned int prDefault = 50;
   short int battDefault = 200;
-<<<<<<< HEAD
-  
- 
-=======
   unsigned short int modeDefault = 0;
   unsigned short int measureSelectDefault = 0;
   unsigned short int scrollDefault = 0;
   unsigned short int selectDefault = 0;
   unsigned short int alarmAcknowledgeDefault = 0;
     
->>>>>>> f2a4caf1c5fe5b2edf0648f1d86abaeb92f1aca9
   //declare the variables that will be used for the tracking in the device
-  unsigned int temperatureRaw[8];
-  temperatureRaw[0] = 75;
-  unsigned int bloodPressRaw[16];
-  bloodPressRaw[0] = sysDefault;
-  bloodPressRaw[8] = diaDefault;
-  unsigned int pulseRateRaw[8];
-  pulseRateRaw[0] = prDefault;
-<<<<<<< HEAD
-  unsigned int tempCorrected[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-  unsigned int bloodPressCorrected[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-  unsigned int prCorrected[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-  short int * batteryState = & battDefault;
+  unsigned int temperatureRaw [8] = {75, 75, 75, 75, 75, 75, 75, 75};
   
-=======
-  unsigned int tempCorrected[8];
-  unsigned int bloodPressCorrected[16];
-  unsigned int prCorrected[8];
+  unsigned int bloodPressRaw [16] = {80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80};
+  
+  unsigned int pulseRateRaw [8] = {50, 50, 50, 50, 50, 50, 50, 50};
+  
+  unsigned int tempCorrected [] = {0, 0, 0, 0, 0, 0, 0, 0};
+  
+  unsigned int bloodPressCorrected [] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0} ;
+ 
+  unsigned int prCorrected [] = {0, 0, 0, 0, 0, 0, 0, 0};
+  
   short int * batteryState = &battDefault;
   unsigned short int * mode = &modeDefault;
   unsigned short int * measureSelect = &measureSelectDefault;
   unsigned short int * scroll = &scrollDefault;
   unsigned short int * select = &selectDefault;
   unsigned short int * alarmAcknowledge = &alarmAcknowledgeDefault;
->>>>>>> f2a4caf1c5fe5b2edf0648f1d86abaeb92f1aca9
   
   //create the TCB for Measure
   MeasureData * measureDataPtr;
   measureDataPtr = (struct MeasureData *) malloc(sizeof(struct MeasureData));
+  
   //TODO: assign measure data locals to point to the values declared at the top
-  measureDataPtr->temperatureRawBuf = temperatureRaw;
-  measureDataPtr->bloodPressRawBuf = bloodPressRaw;
-  measureDataPtr->pulseRateRawBuf = pulseRateRaw;
+  measureDataPtr->temperatureRawBuf = &temperatureRaw[0];
+  measureDataPtr->bloodPressRawBuf = &bloodPressRaw[0];
+  measureDataPtr->pulseRateRawBuf = &pulseRateRaw[0];
     
   //Make a void pointer to datastruct for measure
   void * voidMeasureDataPtr = measureDataPtr;
@@ -116,23 +111,31 @@ void main (void)
   TCB * head = TCBMeasure;
   TCB * curr = head;
   curr->prev = NULL;
-  RIT128x96x4StringDraw("Hello2", 0, 15, 15);
- 
+  
+  RIT128x96x4StringDraw("Test", 0, 0, 15);
+  
+  
   //create the TCB for Compute
   ComputeData * computeDataPtr;
   computeDataPtr = (struct ComputeData *) malloc(sizeof(struct ComputeData));
-  
   //assign compute data locals to point to the values declared at the top
-  computeDataPtr->temperatureRawBuf = temperatureRaw;
-  computeDataPtr->bloodPressRawBuf = bloodPressRaw;
-  computeDataPtr->pulseRateRawBuf = pulseRateRaw;
+  computeDataPtr->temperatureRawBuf = &temperatureRaw[0];
+  computeDataPtr->bloodPressRawBuf = &bloodPressRaw[0];
+  computeDataPtr->pulseRateRawBuf = &pulseRateRaw[0];
+  RIT128x96x4StringDraw("Test2", 0, 0, 15);
   
-  computeDataPtr->tempCorrectedBuf = tempCorrected;
-  computeDataPtr->bloodPressCorrectedBuf = bloodPressCorrected;
-  computeDataPtr->prCorrectedBuf = prCorrected;
-  RIT128x96x4StringDraw("Hello3", 0, 15, 15);
 
+  computeDataPtr->tempCorrectedBuf = (unsigned int *) malloc(8 * sizeof(unsigned int));
+  memcpy(computeDataPtr->tempCorrectedBuf, tempCorrected, 8 * sizeof(unsigned int));
+  RIT128x96x4StringDraw("Hello", 0, 0, 15);
+ 
   /*
+  computeDataPtr->tempCorrectedBuf = &tempCorrected[0];
+  computeDataPtr->bloodPressCorrectedBuf = &bloodPressCorrected[0];
+  computeDataPtr->prCorrectedBuf = &prCorrected[0];
+  RIT128x96x4StringDraw("Hello", 0, 0, 15);
+ 
+  
   //Make a void pointer to datastruct for Compute
   void * voidComputeDataPtr = computeDataPtr;
   //instantiate Task Control Block for Compute
@@ -149,11 +152,8 @@ void main (void)
   TCBCompute->prev = curr;
   curr->next = TCBCompute;
   curr = curr->next;
-<<<<<<< HEAD
-  RIT128x96x4StringDraw("Hello3", 0, 15, 15);
-
-
-=======
+  
+  
   
   //create the TCB for Keypad
   KeypadData * keypadDataPtr;
@@ -176,18 +176,23 @@ void main (void)
   TCBKeypad->myTask = keypadPtr;
   TCBKeypad->taskDataPtr = voidKeypadDataPtr;
   
+
   TCBKeypad->prev = curr;
   curr->next = TCBKeypad;
   curr = curr->next;
   
->>>>>>> f2a4caf1c5fe5b2edf0648f1d86abaeb92f1aca9
+  RIT128x96x4StringDraw("Test3", 0, 0, 15);
+  
+  /*
   //create the TCB for Display
   DisplayData * displayDataPtr;
   displayDataPtr = (struct DisplayData *) malloc(sizeof(struct DisplayData));
+  
   //TODO: assign measure data locals to point to the values declared at the top
-  displayDataPtr->tempCorrectedBuf = tempCorrected;
-  displayDataPtr->bloodPressCorrectedBuf = bloodPressCorrected;
-  displayDataPtr->prCorrectedBuf = prCorrected;
+  displayDataPtr->tempCorrectedBuf = &tempCorrected[0];
+  displayDataPtr->bloodPressCorrectedBuf = &bloodPressCorrected[0];
+  displayDataPtr->prCorrectedBuf = &prCorrected[0];
+  
   displayDataPtr->batteryState = batteryState;
   //Make a void pointer to datastruct for display
   void * voidDisplayDataPtr = displayDataPtr;
@@ -206,14 +211,16 @@ void main (void)
   curr->next = TCBDisplay;
   curr = curr->next;
   
+  RIT128x96x4StringDraw("Test4", 0, 0, 15);
+
   //create the TCB for WarningAlarm
   WarningAlarmData * warningAlarmDataPtr;
   warningAlarmDataPtr = (struct WarningAlarmData *) 
     malloc(sizeof(struct WarningAlarmData));
   //TODO: assign measure data locals to point to the values declared at the top
-  warningAlarmDataPtr->temperatureRawBuf = temperatureRaw;
-  warningAlarmDataPtr->bloodPressRawBuf = bloodPressRaw;
-  warningAlarmDataPtr->pulseRateRawBuf = pulseRateRaw;
+  warningAlarmDataPtr->temperatureRawBuf = &temperatureRaw[0];
+  warningAlarmDataPtr->bloodPressRawBuf = &bloodPressRaw[0];
+  warningAlarmDataPtr->pulseRateRawBuf = &pulseRateRaw[0];
   warningAlarmDataPtr->batteryState = batteryState;
   //Make a void pointer to datastruct for WarningAlarm
   void * voidWarningAlarmDataPtr = warningAlarmDataPtr;
@@ -232,14 +239,17 @@ void main (void)
   curr->next = TCBWarningAlarm;
   curr = curr->next;
   
+  RIT128x96x4StringDraw("Test4", 0, 0, 15);
+
   //create the TCB for Communications
   CommunicationsData * communicationsDataPtr;
-  communicationsDataPtr = (struct CommunicationsData *) 
-    malloc(sizeof(struct CommunicationsData));
+  communicationsDataPtr = (struct CommunicationsData *) malloc(sizeof(struct CommunicationsData));
+  
   //TODO: assign measure data locals to point to the values declared at the top
-  communicationsDataPtr->tempCorrectedBuf = tempCorrected;
-  communicationsDataPtr->bloodPressCorrectedBuf = bloodPressCorrected;
-  communicationsDataPtr->prCorrectedBuf = prCorrected;
+  communicationsDataPtr->tempCorrectedBuf = &tempCorrected[0];
+  communicationsDataPtr->bloodPressCorrectedBuf = &bloodPressCorrected[0]; 
+  communicationsDataPtr->prCorrectedBuf = &prCorrected[0];
+  
   //Make a void pointer to datastruct for Communications
   void * voidCommunicationsDataPtr = communicationsDataPtr;
   //instantiate Task Control Block for Communications
@@ -257,6 +267,8 @@ void main (void)
   curr->next = TCBCommunications;
   curr = curr->next;
   
+  RIT128x96x4StringDraw("Test5", 0, 0, 15);
+
   //create the TCB for StatusMethod
   Status * statusPtr;
   statusPtr = (struct Status *) malloc(sizeof(struct Status));
@@ -279,6 +291,8 @@ void main (void)
   curr->next = TCBStatusMethod;
   curr = curr->next;
   
+  RIT128x96x4StringDraw("Test6", 0, 0, 15);
+
   //create the TCB for Scheduler
 
   //assign Scheduler data locals to point to the values declared at the top
@@ -297,6 +311,9 @@ void main (void)
   
   curr->next = NULL;
   curr = head;
+  
+  RIT128x96x4StringDraw("Test7", 0, 0, 15);
+
   while (1){
     while (curr != NULL) {   
       curr->myTask(curr->taskDataPtr);
@@ -306,6 +323,7 @@ void main (void)
     curr = head;
   }
   */
+ 
 }
 void Schedule(void * voidSchedulerDataPtr) {
   //SchedulerData * schedulerDataPtr = schedulerDataPtr;

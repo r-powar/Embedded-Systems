@@ -20,10 +20,23 @@ void Measure(void * voidMeasureDataPtr) {
     unsigned int * sysPRaw = measureDataPtr->bloodPressRawBuf;
     unsigned int * diasPRaw = measureDataPtr->bloodPressRawBuf+8;
     unsigned int * pulseRRaw = measureDataPtr->pulseRateRawBuf;
-    calcTempRaw(tempRaw);
-    sysPressRaw(sysPRaw);
-    diasPressRaw(diasPRaw);
-    pulseRateRaw(pulseRRaw);
+    unsigned short int * measurementSelection = measureDataPtr-> measurementSelection;
+    unsigned short int * addCompute = measureDataPtr->addCompute;
+     switch (*measurementSelection){
+      case 1:
+        sysPressRaw(sysPRaw);
+        diasPressRaw(diasPRaw);
+        *addCompute = 1;
+        break;
+      case 2:
+        calcTempRaw(tempRaw);
+        *addCompute = 1;
+        break;
+      case 3:
+        pulseRateRaw(pulseRRaw);
+        *addCompute = 1;
+        break;
+    }
   }
   
 }

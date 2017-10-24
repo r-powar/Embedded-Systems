@@ -16,15 +16,12 @@
 
 void Compute(void * voidComputeDataPtr) {
   // Maddie: changed to voidComputeDataPtr
-  
-  if(globalCounter%5 == 0){
-    ComputeData * computeDataPtr = voidComputeDataPtr;
-    //perform conversions and corrections
-    convertToCelsius(computeDataPtr, computeDataPtr->temperatureRawBuf);
-    diasPressConversion(computeDataPtr, computeDataPtr->bloodPressRawBuf);
-    sysPressConversion(computeDataPtr, computeDataPtr->bloodPressRawBuf+8);
-    pulseRateConversion(computeDataPtr, computeDataPtr->pulseRateRawBuf);  
-  }
+  ComputeData * computeDataPtr = voidComputeDataPtr;
+  //perform conversions and corrections
+  convertToCelsius(computeDataPtr, computeDataPtr->temperatureRawBuf);
+  diasPressConversion(computeDataPtr, computeDataPtr->bloodPressRawBuf);
+  sysPressConversion(computeDataPtr, computeDataPtr->bloodPressRawBuf+8);
+  pulseRateConversion(computeDataPtr, computeDataPtr->pulseRateRawBuf);  
   
 }
 

@@ -52,24 +52,24 @@ void WarningAlarm(void * voidWarningAlarmDataPtr) {
     alarmOn = true;
     alarmDelay = BATTERY_DELAY;
   }
-  blinky(alarmDelay, alarmOn);
+//  blinky(alarmDelay, alarmOn);
 }
 
-void blinky(unsigned long aValue, bool alarmOn)
-{  
-  //if alarm is off and it is time to turn on...
-  if (alarmOn == true) {
-    if (globalCounter % aValue == 0){
-      if (!LEDOn) {
-        // Turn on the LED.
-        GPIO_PORTF_DATA_R |= 0x01;
-        LEDOn = !LEDOn;
-      }
-      else {
-        // Turn off the LED.
-        GPIO_PORTF_DATA_R &= ~(0x01);
-        LEDOn = !LEDOn;
-      }
-    }
-  }
-}
+//void blinky(unsigned long aValue, bool alarmOn)
+//{  
+//  //if alarm is off and it is time to turn on...
+//  if (alarmOn == true) {
+//    if (globalCounter % aValue == 0){
+//      if (!LEDOn) {
+//        // Turn on the LED.
+//        GPIO_PORTF_DATA_R |= 0x01;
+//        LEDOn = !LEDOn;
+//      }
+//      else {
+//        // Turn off the LED.
+//        GPIO_PORTF_DATA_R &= ~(0x01);
+//        LEDOn = !LEDOn;
+//      }
+//    }
+//  }
+//}

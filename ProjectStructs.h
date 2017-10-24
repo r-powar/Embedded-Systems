@@ -3,6 +3,7 @@ struct MeasureData{
   unsigned int * bloodPressRawBuf;
   unsigned int * pulseRateRawBuf;
   unsigned short int * measurementSelection;
+  unsigned short int * addCompute;
 };
 typedef struct MeasureData MeasureData;
 
@@ -22,8 +23,10 @@ struct DisplayData{
   unsigned int * bloodPressCorrectedBuf;
   unsigned int * prCorrectedBuf;
   short int * batteryState;
-  
   unsigned short int * mode;
+  unsigned short int * scroll;
+  unsigned short int * select;
+  unsigned short int * measurementSelection;
 };
 typedef struct DisplayData DisplayData;
 
@@ -60,6 +63,8 @@ typedef struct CommunicationsData CommunicationsData;
 
 struct SchedulerData{	
   int * globalCounter;
+  unsigned short int * addCompute;
+  unsigned short int * addCommunications;
 };
 typedef struct SchedulerData SchedulerData;
 

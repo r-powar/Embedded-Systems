@@ -5,3 +5,5 @@ int selectPressed = 0;
 int upPressed = 0;
 int downPressed = 0;
 int leftPressed = 0;
+int rightPressed = 0;
+int runMeasure = 0;

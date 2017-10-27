@@ -8,12 +8,11 @@
  //global declaration
  static int sysComplete = 0;
  static int diasComplete = 0;
- 
+ void insertAtFront (int value, unsigned int * buff);
  //constant variable
  
 void Measure(void * voidMeasureDataPtr) {
-  
-  if(globalCounter%5 == 0){
+  if(runMeasure ==1){
     
     MeasureData * measureDataPtr = voidMeasureDataPtr;
     unsigned int * tempRaw = measureDataPtr->temperatureRawBuf;
@@ -37,6 +36,7 @@ void Measure(void * voidMeasureDataPtr) {
         *addCompute = 1;
         break;
     }
+    runMeasure = 0;
   }
   
 }
@@ -56,9 +56,11 @@ void calcTempRaw(unsigned int *tempRaw){
   }
   
   if(funcCall % 2 == 0){
-    *tempRaw += isReversed ? -2 : 2;
+    //*tempRaw += isReversed ? -2 : 2;
+    insertAtFront(*tempRaw + (isReversed ? -2 : 2), tempRaw);
   }else{
-    *tempRaw += isReversed ? 1 : -1;
+    //*tempRaw += isReversed ? 1 : -1;
+    insertAtFront(*tempRaw + (isReversed ? 1 : -1), tempRaw);
   }
   funcCall++;
 }
@@ -68,7 +70,9 @@ void sysPressRaw(unsigned int * sysRaw){
   if(diasComplete && sysComplete){
     diasComplete = 0;
     sysComplete = 0;
-    *sysRaw = 80;
+    rightPressed = 1;
+    //*sysRaw = 80;
+    insertAtFront(80, sysRaw);
   }
   if(*sysRaw > 100){
     //set systolic variable to complete
@@ -76,9 +80,11 @@ void sysPressRaw(unsigned int * sysRaw){
   }else{
     if (!sysComplete){
       if(funcCall % 2 == 0){
-        *sysRaw += 3;
+        //*sysRaw += 3;
+        insertAtFront(*sysRaw + 3, sysRaw);
       }else{
-        *sysRaw--;
+        //*sysRaw--;
+        insertAtFront(*sysRaw - 1, sysRaw);
       }   
     }
   }
@@ -92,15 +98,18 @@ void diasPressRaw(unsigned int *diasRaw){
   }else{
     if (!diasComplete) {
       if (funcCall % 2) {
-        *diasRaw -= 2;
+        //*diasRaw -= 2;
+        insertAtFront(*diasRaw - 2, diasRaw);
       }
       else {
-        *diasRaw += 1;
+        //*diasRaw += 1;
+        insertAtFront(*diasRaw + 1, diasRaw);
       }
     }
   }
   if (diasComplete && sysComplete) {
-    *diasRaw = 80; 
+    //*diasRaw = 80; 
+    insertAtFront(80, diasRaw);
   }
   funcCall++;
 }
@@ -119,9 +128,18 @@ void pulseRateRaw(unsigned int *prRaw){
     }
   }
   if(funcCall % 2 == 0){
-    *prRaw += isReversed ? -1 : 1;
+    //*prRaw += isReversed ? -1 : 1;
+    insertAtFront(*prRaw + (isReversed ? -1 : 1), prRaw);
   }else{
-    *prRaw += isReversed ? 3 : -3;
+    //*prRaw += isReversed ? 3 : -3;
+    insertAtFront(*prRaw + (isReversed ? 3 : -3), prRaw);
   }  
   funcCall++;
+}
+
+void insertAtFront (int value, unsigned int * buff) {
+  for (int i = 7; i >0; i--){
+    *(buff + i) = *(buff + (i-1));
+  }
+  *buff = value;
 }

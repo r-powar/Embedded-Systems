@@ -4,3 +4,5 @@ extern int selectPressed;
 extern int upPressed;
 extern int downPressed;
 extern int leftPressed;
+extern int rightPressed;
+extern int runMeasure;

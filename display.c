@@ -20,15 +20,13 @@ void Display(void * voidDisplayDataPtr) {
   unsigned short int * scroll = displayDataPtr->scroll;
   unsigned short int * measureSelect = displayDataPtr->measurementSelection;
   unsigned short int * select = displayDataPtr->select;
-  static unsigned short int currentMode= 1;
-  static unsigned short int currentScroll= 0;
+  static unsigned short int currentMode;
+  static unsigned short int currentScroll;
   //if display needs to change
-  if (currentMode != *mode || currentScroll != *scroll || *select == 1 ) {
+  if (runDisplay) {
       RIT128x96x4Clear();
-      currentMode = *mode;
-      currentScroll = *scroll;
       *select = 0;
-
+      runDisplay = 0;
       //Home Screen
       if (*mode == 0) {
         //menu is highlighted  

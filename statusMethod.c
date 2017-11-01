@@ -7,12 +7,15 @@
 #include "GlobalCounter.h"
 
 void StatusMethod(void * voidStatusPtr) {
-  if(globalCounter%5 == 0){
+  if(runMeasure){
     Status * statusPtr = voidStatusPtr;
     *(statusPtr->batteryState) -= 1;
     if (*(statusPtr->batteryState) == 0) {
       *(statusPtr->batteryState) = 200;      
     }
+    runMeasure = 0;
+
+    //runDisplay = 1;
   }
   
 }

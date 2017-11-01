@@ -67,6 +67,7 @@ Timer0IntHandler(void)
   IntMasterEnable();
 }
 
+
 //handle select interrupts
 void selectPressedHandler(void){//port F pin 1
   GPIOPinIntClear(GPIO_PORTF_BASE, GPIO_PIN_1);
@@ -164,10 +165,10 @@ void main (void)
   RIT128x96x4Init(1000000);
   
   //initialize defaults
-  unsigned int tempDefault = 75;
-  unsigned int sysDefault = 80;
-  unsigned int diaDefault = 80;
-  unsigned int prDefault = 50;
+  //unsigned int tempDefault = 75;
+  //unsigned int sysDefault = 80;
+  //unsigned int diaDefault = 80;
+  //unsigned int prDefault = 50;
   short int battDefault = 200;
   unsigned short int modeDefault = 0;
   unsigned short int measureSelectDefault = 0;
@@ -177,16 +178,39 @@ void main (void)
   unsigned short int addComputeDefault = 1;
   unsigned short int addCommunicationsDefault = 0;
   //declare the variables that will be used for the tracking in the device
-  unsigned int temperatureRaw[8];
-  temperatureRaw[0] = tempDefault;
-  unsigned int bloodPressRaw[16];
-  bloodPressRaw[0] = sysDefault;
-  bloodPressRaw[8] = diaDefault;
-  unsigned int pulseRateRaw[8];
-  pulseRateRaw[0] = prDefault;
-  unsigned int tempCorrected[8];
-  unsigned int bloodPressCorrected[16];
-  unsigned int prCorrected[8];
+  unsigned int *temperatureRaw;
+  //temperatureRaw[0] = tempDefault;
+  unsigned int *bloodPressRaw;
+ // bloodPressRaw[0] = sysDefault;
+  //bloodPressRaw[8] = diaDefault;
+  unsigned int *pulseRateRaw;
+  //pulseRateRaw[0] = prDefault;
+  unsigned int *tempCorrected;
+  unsigned int *bloodPressCorrected;
+  unsigned int *prCorrected;
+  
+  temperatureRaw = (unsigned int *) malloc(sizeof(unsigned int) * 8);
+  bloodPressRaw = (unsigned int *) malloc(sizeof(unsigned int) * 16);
+  pulseRateRaw = (unsigned int *) malloc(sizeof(unsigned int) * 8);
+  
+  tempCorrected = (unsigned int *) malloc(sizeof(unsigned int) * 8);
+  bloodPressCorrected = (unsigned int *) malloc(sizeof(unsigned int) * 16);
+  prCorrected = (unsigned int *) malloc(sizeof(unsigned int) * 8);
+  
+  for(volatile int i = 0; i < 8; i++){
+    tempCorrected[i] = 0;
+    prCorrected[i] = 0;
+    temperatureRaw[i] = 75;
+    pulseRateRaw[i] = 50;
+  }
+  
+  for(volatile int i = 0; i < 16; i++){
+    bloodPressRaw[i] = 80;
+    bloodPressCorrected[i] = 0;
+  }
+  
+  
+  
   short int * batteryState = &battDefault;
   unsigned short int * mode = &modeDefault;
   unsigned short int * measureSelect = &measureSelectDefault;
@@ -198,9 +222,9 @@ void main (void)
   //create the TCB for Measure
   MeasureData * measureDataPtr;
   measureDataPtr = (struct MeasureData *) malloc(sizeof(struct MeasureData));
-  measureDataPtr->temperatureRawBuf = temperatureRaw;
-  measureDataPtr->bloodPressRawBuf = bloodPressRaw;
-  measureDataPtr->pulseRateRawBuf = pulseRateRaw;
+  measureDataPtr->temperatureRawBuf = &temperatureRaw[0];
+  measureDataPtr->bloodPressRawBuf = &bloodPressRaw[0];
+  measureDataPtr->pulseRateRawBuf = &pulseRateRaw[0];
   measureDataPtr->measurementSelection = measureSelect;
   measureDataPtr->addCompute = addCompute;
   //Make a void pointer to datastruct for measure
@@ -225,13 +249,13 @@ void main (void)
   ComputeData * computeDataPtr;
   computeDataPtr = (struct ComputeData *) malloc(sizeof(struct ComputeData));
   //assign compute data locals to point to the values declared at the top
-  computeDataPtr->temperatureRawBuf = temperatureRaw;
-  computeDataPtr->bloodPressRawBuf = bloodPressRaw;
-  computeDataPtr->pulseRateRawBuf = pulseRateRaw;
+  computeDataPtr->temperatureRawBuf = &temperatureRaw[0];
+  computeDataPtr->bloodPressRawBuf = &bloodPressRaw[0];
+  computeDataPtr->pulseRateRawBuf = &pulseRateRaw[0];
   
-  computeDataPtr->tempCorrectedBuf = tempCorrected;
-  computeDataPtr->bloodPressCorrectedBuf = bloodPressCorrected;
-  computeDataPtr->prCorrectedBuf = prCorrected;
+  computeDataPtr->tempCorrectedBuf = &tempCorrected[0];
+  computeDataPtr->bloodPressCorrectedBuf = &bloodPressCorrected[0];
+  computeDataPtr->prCorrectedBuf = &prCorrected[0];
   //Make a void pointer to datastruct for Compute
   void * voidComputeDataPtr = computeDataPtr;
   //instantiate Task Control Block for Compute
@@ -275,9 +299,9 @@ void main (void)
   DisplayData * displayDataPtr;
   displayDataPtr = (struct DisplayData *) malloc(sizeof(struct DisplayData));
   //TODO: assign measure data locals to point to the values declared at the top
-  displayDataPtr->tempCorrectedBuf = tempCorrected;
-  displayDataPtr->bloodPressCorrectedBuf = bloodPressCorrected;
-  displayDataPtr->prCorrectedBuf = prCorrected;
+  displayDataPtr->tempCorrectedBuf = &tempCorrected[0];
+  displayDataPtr->bloodPressCorrectedBuf = &bloodPressCorrected[0];
+  displayDataPtr->prCorrectedBuf = &prCorrected[0];
   displayDataPtr->batteryState = batteryState;
   displayDataPtr->mode = mode;
   displayDataPtr->scroll = scroll;
@@ -306,9 +330,9 @@ void main (void)
   warningAlarmDataPtr = (struct WarningAlarmData *) 
     malloc(sizeof(struct WarningAlarmData));
   //TODO: assign measure data locals to point to the values declared at the top
-  warningAlarmDataPtr->temperatureRawBuf = temperatureRaw;
-  warningAlarmDataPtr->bloodPressRawBuf = bloodPressRaw;
-  warningAlarmDataPtr->pulseRateRawBuf = pulseRateRaw;
+  warningAlarmDataPtr->temperatureRawBuf = &temperatureRaw[0];
+  warningAlarmDataPtr->bloodPressRawBuf = &bloodPressRaw[0];
+  warningAlarmDataPtr->pulseRateRawBuf = &pulseRateRaw[0];
   warningAlarmDataPtr->batteryState = batteryState;
   //Make a void pointer to datastruct for WarningAlarm
   void * voidWarningAlarmDataPtr = warningAlarmDataPtr;
@@ -333,9 +357,9 @@ void main (void)
   communicationsDataPtr = (struct CommunicationsData *) 
     malloc(sizeof(struct CommunicationsData));
   //TODO: assign measure data locals to point to the values declared at the top
-  communicationsDataPtr->tempCorrectedBuf = tempCorrected;
-  communicationsDataPtr->bloodPressCorrectedBuf = bloodPressCorrected;
-  communicationsDataPtr->prCorrectedBuf = prCorrected;
+  communicationsDataPtr->tempCorrectedBuf = &tempCorrected[0];
+  communicationsDataPtr->bloodPressCorrectedBuf = &bloodPressCorrected[0];
+  communicationsDataPtr->prCorrectedBuf = &prCorrected[0];
   //Make a void pointer to datastruct for Communications
   void * voidCommunicationsDataPtr = communicationsDataPtr;
   //instantiate Task Control Block for Communications
@@ -412,10 +436,11 @@ void main (void)
   }
 }
 void Schedule(void * voidSchedulerDataPtr) {
-  if(globalCounter%5 == 0){
+  while(globalCounter%5 == 0){
     delay(15);
     runMeasure = 1;
   }
+ 
 }
 //Keypad method should be moved into its own class
 void Keypad(void * voidKeypadDataPtr) {
@@ -436,6 +461,7 @@ void Keypad(void * voidKeypadDataPtr) {
       *select = 1;
     }
     selectPressed = 0;
+    runDisplay = 1;
   }
   if (downPressed == 1) {
     if (*mode == 0) {
@@ -450,6 +476,7 @@ void Keypad(void * voidKeypadDataPtr) {
       }
     }
     downPressed = 0;
+     runDisplay = 1;
   }
   if (upPressed == 1) {
     if (*mode == 0) {
@@ -464,11 +491,13 @@ void Keypad(void * voidKeypadDataPtr) {
       }
     }
     upPressed = 0;
+    runDisplay = 1;
   }
   if (leftPressed == 1) {
     *mode= 0;
     *scroll = 0;
     leftPressed = 0;
+    runDisplay = 1;
   }
 }
 void Communications (void * voidCommunicationsDataPtr) { 

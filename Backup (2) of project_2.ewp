@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.20.1.14181</state>
+                    <state>8.11.3.13977</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -116,7 +116,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>26</version>
+                    <version>25</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -133,7 +133,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>26</version>
+                    <version>25</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -156,7 +156,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>26</version>
+                    <version>25</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -215,8 +215,7 @@
                 </option>
                 <option>
                     <name>CCDefines</name>
-                    <state>ewarm</state>
-                    <state>PART_LM3S8962</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -1135,7 +1134,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>26</version>
+                    <version>25</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -1152,7 +1151,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>26</version>
+                    <version>25</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -1175,7 +1174,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>26</version>
+                    <version>25</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -2035,34 +2034,31 @@
         </settings>
     </configuration>
     <file>
-        <name>$PROJ_DIR$\compute.c</name>
+        <name>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\BoolInclude.h</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\compute.h</name>
+        <name>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\compute.c</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\display.c</name>
+        <name>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\compute.h</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\display.h</name>
+        <name>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\display.c</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\display.h</name>
     </file>
     <file>
         <name>$PROJ_DIR$\..\..\..\driverlib\ewarm-cm3\Exe\driverlib-cm3.a</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\GlobalCounter.c</name>
-    </file>
-    <file>
-        <name>$PROJ_DIR$\GlobalCounter.h</name>
-    </file>
-    <file>
         <name>$PROJ_DIR$\main.c</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\measure.c</name>
+        <name>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\measure.c</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\measure.h</name>
+        <name>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\measure.h</name>
     </file>
     <file>
         <name>$PROJ_DIR$\ProjectStructs.h</name>
@@ -2071,24 +2067,24 @@
         <name>$PROJ_DIR$\..\drivers\rit128x96x4.c</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\startup_ewarm.c</name>
+        <name>$PROJ_DIR$\..\hello\startup_ewarm.c</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\statusMethod.c</name>
+        <name>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\statusMethod.c</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\statusMethod.h</name>
+        <name>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\statusMethod.h</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\TCB.h</name>
+        <name>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\TCB.h</name>
     </file>
     <file>
         <name>$PROJ_DIR$\..\..\..\utils\ustdlib.c</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\warning.c</name>
+        <name>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\warning.c</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\warning.h</name>
+        <name>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\warning.h</name>
     </file>
 </project>

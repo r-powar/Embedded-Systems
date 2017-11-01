@@ -14,6 +14,13 @@
 #define PULSE_RATE_BASE 8
 #define PULSE_RATE_RATIO 3
 
+void computeinsertAtFront (int value, unsigned int * buff) {
+  for (int i = 7; i >0; i--){
+    *(buff + i) = *(buff + (i-1));
+  }
+  *buff = value;
+}
+
 void Compute(void * voidComputeDataPtr) {
   // Maddie: changed to voidComputeDataPtr
   ComputeData * computeDataPtr = voidComputeDataPtr;
@@ -29,27 +36,27 @@ void sysPressConversion(ComputeData *compute, unsigned int *sysRaw)
 {
   int temp = SYSTOLIC_BASE + (SYSTOLIC_RATIO * *sysRaw);
   //*compute->bloodPressCorrectedBuf = temp;
-  insertAtFront(temp, compute->bloodPressCorrectedBuf);
+  computeinsertAtFront(temp, compute->bloodPressCorrectedBuf);
 }
 
 void diasPressConversion(ComputeData *compute, unsigned int *diasRaw)
 {
   int temp = DIASTOLIC_BASE + (DIASTOLIC_RATIO * *diasRaw);
   //*(compute->bloodPressCorrectedBuf+8) = temp;
-  insertAtFront(temp,compute->bloodPressCorrectedBuf+8);
+  computeinsertAtFront(temp,compute->bloodPressCorrectedBuf+8);
 }
 
 void pulseRateConversion(ComputeData *compute, unsigned int *pulseRaw)
 {
   int temp = PULSE_RATE_BASE + (PULSE_RATE_RATIO * *pulseRaw);
   //*(compute->prCorrectedBuf) = temp;
-  insertAtFront(temp,compute->prCorrectedBuf);
+  computeinsertAtFront(temp,compute->prCorrectedBuf);
 }
 
 void convertToCelsius(ComputeData *compute, unsigned int *tempRaw)
 {
   int temp = (CELSIUS_BASE + (CELSIUS_RATIO * *tempRaw));
-  insertAtFront(temp, compute->tempCorrectedBuf);
+  computeinsertAtFront(temp, compute->tempCorrectedBuf);
   //*(compute->tempCorrectedBuf) = temp;
 }
 

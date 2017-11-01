@@ -67,4 +67,3 @@ struct SchedulerData{
   unsigned short int * addCommunications;
 };
 typedef struct SchedulerData SchedulerData;
-

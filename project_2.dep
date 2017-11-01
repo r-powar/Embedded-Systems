@@ -1,173 +1,321 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
     <fileVersion>2</fileVersion>
-    <fileChecksum>1176082143</fileChecksum>
+    <fileChecksum>2375219494</fileChecksum>
     <configuration>
         <name>Debug</name>
         <outputs>
-            <file>$PROJ_DIR$\GlobalCounter.h</file>
-            <file>$PROJ_DIR$\GlobalCounter.c</file>
-            <file>$TOOLKIT_DIR$\inc\c\stdio.h</file>
-            <file>$PROJ_DIR$\Debug\Obj\startup_ewarm.__cstat.et</file>
-            <file>$TOOLKIT_DIR$\inc\c\ysizet.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
-            <file>$PROJ_DIR$\..\..\..\inc\lm3s8962.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\stdbool.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</file>
-            <file>$PROJ_DIR$\Debug\Obj\display.__cstat.et</file>
-            <file>$PROJ_DIR$\Debug\Obj\display.pbi</file>
-            <file>$PROJ_DIR$\Debug\Obj\compute.o</file>
-            <file>$PROJ_DIR$\Debug\Obj\compute.pbi</file>
-            <file>$PROJ_DIR$\Debug\Obj\startup_ewarm.o</file>
-            <file>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\ProjectStructs.h</file>
-            <file>$PROJ_DIR$\Debug\Obj\measure.pbi</file>
-            <file>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\TCB.h</file>
-            <file>$PROJ_DIR$\..\hello\startup_ewarm.c</file>
-            <file>$PROJ_DIR$\Debug\Obj\statusMethod.o</file>
-            <file>$PROJ_DIR$\Debug\Obj\warning.pbi</file>
-            <file>$PROJ_DIR$\Debug\Obj\measure.o</file>
-            <file>$PROJ_DIR$\..\..\..\driverlib\debug.h</file>
-            <file>$PROJ_DIR$\..\..\..\utils\ustdlib.c</file>
-            <file>$PROJ_DIR$\..\..\..\driverlib\sysctl.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\warning.c</file>
-            <file>$PROJ_DIR$\Debug\Obj\compute.__cstat.et</file>
-            <file>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\statusMethod.c</file>
-            <file>$PROJ_DIR$\Debug\Obj\startup_ewarm.pbi</file>
-            <file>$PROJ_DIR$\Debug\Obj\rit128x96x4.__cstat.et</file>
-            <file>$PROJ_DIR$\Debug\Obj\warning.__cstat.et</file>
-            <file>$TOOLKIT_DIR$\inc\c\string.h</file>
-            <file>$PROJ_DIR$\..\..\..\inc\hw_memmap.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\statusMethod.h</file>
-            <file>$PROJ_DIR$\Debug\Obj\statusMethod.pbi</file>
-            <file>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\warning.h</file>
-            <file>$PROJ_DIR$\Debug\Obj\measure.__cstat.et</file>
-            <file>$PROJ_DIR$\Debug\Obj\statusMethod.__cstat.et</file>
-            <file>$PROJ_DIR$\Debug\Obj\warning.o</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
-            <file>$PROJ_DIR$\Debug\Obj\display.o</file>
-            <file>$PROJ_DIR$\Debug\Obj\main.o</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\pwm.h</file>
+            <file>$PROJ_DIR$\..\..\..\utils\uartstdio.h</file>
+            <file>$PROJ_DIR$\measure.c</file>
             <file>$PROJ_DIR$\TCB.h</file>
-            <file>$TOOLKIT_DIR$\lib\shb_l.a</file>
-            <file>$PROJ_DIR$\Debug\Obj\ustdlib.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\main.o</file>
             <file>$PROJ_DIR$\..\..\..\utils\ustdlib.h</file>
-            <file>$PROJ_DIR$\..\..\..\inc\hw_sysctl.h</file>
-            <file>$TOOLKIT_DIR$\lib\rt7M_tl.a</file>
-            <file>$PROJ_DIR$\Debug\Exe\project_2.out</file>
-            <file>$PROJ_DIR$\Debug\Obj\main.__cstat.et</file>
-            <file>$PROJ_DIR$\Debug\List\project_2.map</file>
-            <file>$TOOLKIT_DIR$\lib\m7M_tl.a</file>
             <file>$PROJ_DIR$\Debug\Obj\rit128x96x4.pbi</file>
-            <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
-            <file>$PROJ_DIR$\BoolInclude.h</file>
-            <file>$PROJ_DIR$\..\..\..\driverlib\pin_map.h</file>
-            <file>$TOOLKIT_DIR$\lib\dl7M_tln.a</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
             <file>$PROJ_DIR$\Debug\Obj\project_2.pbd</file>
-            <file>$TOOLKIT_DIR$\config\linker\TexasInstruments\LM3S8962.icf</file>
-            <file>$PROJ_DIR$\..\..\..\inc\hw_ssi.h</file>
-            <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
-            <file>$PROJ_DIR$\Debug\Obj\rit128x96x4.o</file>
-            <file>$PROJ_DIR$\Debug\Obj\ustdlib.pbi</file>
-            <file>$TOOLKIT_DIR$\inc\c\stdarg.h</file>
-            <file>$PROJ_DIR$\..\..\..\driverlib\gpio.h</file>
             <file>$PROJ_DIR$\..\drivers\rit128x96x4.h</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\gpio.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdarg.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\ustdlib.pbi</file>
             <file>$PROJ_DIR$\..\..\..\driverlib\ssi.h</file>
             <file>$PROJ_DIR$\..\..\..\inc\hw_types.h</file>
-            <file>$PROJ_DIR$\Debug\Obj\ustdlib.__cstat.et</file>
-            <file>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\measure.h</file>
+            <file>$PROJ_DIR$\..\..\..\inc\hw_uart.h</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\rom_map.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\string.h</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\timer.h</file>
+            <file>$TOOLKIT_DIR$\lib\rt7M_tl.a</file>
+            <file>$TOOLKIT_DIR$\lib\dl7M_tln.a</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\interrupt.h</file>
+            <file>$PROJ_DIR$\..\..\..\utils\uartstdio.c</file>
+            <file>$PROJ_DIR$\..\..\..\inc\hw_gpio.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
+            <file>$PROJ_DIR$\BoolInclude.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
+            <file>$PROJ_DIR$\..\..\..\inc\hw_ints.h</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\pin_map.h</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\rom.h</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\uart.h</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\systick.h</file>
+            <file>$PROJ_DIR$\..\..\..\inc\hw_ssi.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\display.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\statusMethod.pbi</file>
+            <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdio.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\rit128x96x4.o</file>
+            <file>$PROJ_DIR$\..\..\..\inc\hw_memmap.h</file>
+            <file>$TOOLKIT_DIR$\config\linker\TexasInstruments\LM3S8962.icf</file>
+            <file>$PROJ_DIR$\..\..\..\inc\hw_sysctl.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\warning.o</file>
+            <file>$TOOLKIT_DIR$\lib\shb_l.a</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\debug.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\measure.o</file>
+            <file>$PROJ_DIR$\Debug\List\project_2.map</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\compute.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\ustdlib.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\startup_ewarm.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\startup_ewarm.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\statusMethod.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\display.pbi</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
+            <file>$TOOLKIT_DIR$\lib\m7M_tl.a</file>
+            <file>$PROJ_DIR$\Debug\Exe\project_2.out</file>
+            <file>$PROJ_DIR$\Debug\Obj\compute.pbi</file>
+            <file>$TOOLKIT_DIR$\inc\c\ysizet.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\measure.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\warning.pbi</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\sysctl.h</file>
+            <file>$PROJ_DIR$\GlobalCounter.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
+            <file>$PROJ_DIR$\..\..\..\inc\lm3s8962.h</file>
             <file>$PROJ_DIR$\ProjectStructs.h</file>
-            <file>$PROJ_DIR$\..\..\..\driverlib\ewarm-cm3\Exe\driverlib-cm3.a</file>
-            <file>$PROJ_DIR$\..\drivers\rit128x96x4.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\BoolInclude.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\compute.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\display.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\compute.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\display.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdbool.h</file>
             <file>$PROJ_DIR$\main.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\measure.c</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\ewarm-cm3\Exe\driverlib-cm3.a</file>
+            <file>$PROJ_DIR$\..\..\..\utils\ustdlib.c</file>
+            <file>$PROJ_DIR$\..\drivers\rit128x96x4.c</file>
+            <file>$PROJ_DIR$\GlobalCounter.c</file>
+            <file>$PROJ_DIR$\startup_ewarm.c</file>
+            <file>$PROJ_DIR$\compute.c</file>
+            <file>$PROJ_DIR$\compute.h</file>
+            <file>$PROJ_DIR$\display.c</file>
+            <file>$PROJ_DIR$\warning.c</file>
+            <file>$PROJ_DIR$\statusMethod.h</file>
+            <file>$PROJ_DIR$\display.h</file>
+            <file>$PROJ_DIR$\measure.h</file>
+            <file>$PROJ_DIR$\statusMethod.c</file>
+            <file>$PROJ_DIR$\warning.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\GlobalCounter.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\GlobalCounter.o</file>
         </outputs>
         <file>
-            <name>$PROJ_DIR$\..\hello\startup_ewarm.c</name>
+            <name>$PROJ_DIR$\measure.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 13</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 3</file>
+                    <file> 44</file>
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 27</file>
+                    <file> 58</file>
                 </tool>
             </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 36 23 34 62 46 25 57 65 64 3 78 61</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 57 78 64 23 46 34 65 3 61 62 36 25</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\Debug\Exe\project_2.out</name>
+            <outputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 45</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 39 47 32 67 82 4 44 37 49 51 48 41 42 18 54 19</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\main.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 4</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 35</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 36 23 34 62 46 25 57 65 64 24 3 63 61 22 26 38 13 43 9 27 20 30 60 8 21 14 28 15 29 1 0 17</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 60 22 15 3 43 17 23 10 64 61 38 20 21 57 25 14 65 24 63 26 13 9 30 8 0 34 46 29 36 62 27 28 1</file>
+                </tool>
+            </inputs>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\..\utils\ustdlib.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 43</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 69</file>
+                    <file> 48</file>
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 63</file>
+                    <file> 11</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 30 53 52 5 8 57 4 38 21 44</file>
+                    <file> 16 23 34 62 46 25 57 53 43 5</file>
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 44 52 5 21 53 4 38 8 57 30 64</file>
+                    <file> 5 34 62 43 23 57 53 46 25 16 10</file>
                 </tool>
             </inputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\warning.c</name>
+            <name>$PROJ_DIR$\..\drivers\rit128x96x4.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
                     <file> 37</file>
                 </tool>
                 <tool>
-                    <name>__cstat</name>
-                    <file> 29</file>
-                </tool>
-                <tool>
                     <name>BICOMP</name>
-                    <file> 19</file>
+                    <file> 6</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 2 53 52 5 8 57 4 7 6 14 16 34</file>
+                    <file> 31 38 40 13 43 9 27 12 60 8</file>
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 53 16 4 57 6 8 7 14 34 52 5 2</file>
+                    <file> 8 43 40 12 38 13 9 60 27 31</file>
                 </tool>
             </inputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\statusMethod.c</name>
+            <name>[ROOT_NODE]</name>
+            <outputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 55 45</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\GlobalCounter.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 18</file>
+                    <file> 82</file>
                 </tool>
                 <tool>
-                    <name>__cstat</name>
-                    <file> 36</file>
+                    <name>BICOMP</name>
+                    <file> 81</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 61</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 61</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\startup_ewarm.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 49</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 50</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\compute.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 47</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 56</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 36 23 34 62 46 25 57 65 64 3 73 61</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 34 73 62 64 65 3 61 23 57 46 25 36</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\display.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 32</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 52</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 36 23 34 62 46 25 57 65 16 53 64 3 77 61 5</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 34 3 53 16 61 62 23 65 64 77 5 57 36 46 25 10</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\warning.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 41</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 59</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 36 23 34 62 46 25 57 65 63 64 3 80 61 38 13 43 9 27 0 60 8</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 13 23 3 60 57 25 63 61 9 46 65 64 80 38 43 0 8 34 62 36 27</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\statusMethod.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 51</file>
                 </tool>
                 <tool>
                     <name>BICOMP</name>
@@ -177,170 +325,11 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 2 53 52 5 8 57 4 7 30 38 14 16 78</file>
+                    <file> 36 23 34 62 46 25 57 65 16 53 64 3 77 61</file>
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 52 16 5 30 7 14 78 53 4 8 57 2 38</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\Debug\Exe\project_2.out</name>
-            <outputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 49</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 59 11 39 72 40 20 62 13 18 43 37 42 46 50 56</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>[ROOT_NODE]</name>
-            <outputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 47 49</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\drivers\rit128x96x4.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 62</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 28</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 51</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 60 31 45 68 21 65 55 67 23 66</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 66 21 45 67 31 68 65 23 60 55</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\compute.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 11</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 25</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 12</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 2 53 52 5 8 57 4 7 14 16 77</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 4 77 57 14 53 7 16 52 8 2 5</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\display.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 39</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 9</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 10</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 44 7 30 53 52 5 8 57 4 38 14 16 78</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 16 30 53 5 4 7 14 78 64 52 8 57 38 44</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\main.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 40</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 48</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 61</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 2 53 52 5 8 57 4 7 71 54 41 6</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 41 71 1 53 8 7 54 6 4 57 2 52 5 0</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\measure.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 20</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 35</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 15</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 2 53 52 5 8 57 4 7 14 16 70</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 70 4 14 53 5 7 16 52 2 8 57</file>
+                    <file> 46 23 3 16 61 57 25 65 64 77 34 62 36 53</file>
                 </tool>
             </inputs>
         </file>

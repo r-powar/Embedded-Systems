@@ -7,3 +7,4 @@ int downPressed = 0;
 int leftPressed = 0;
 int rightPressed = 0;
 int runMeasure = 0;
+int runDisplay = 1;

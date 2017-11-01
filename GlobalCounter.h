@@ -6,3 +6,4 @@ extern int downPressed;
 extern int leftPressed;
 extern int rightPressed;
 extern int runMeasure;
+extern int runDisplay;

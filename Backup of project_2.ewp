@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.20.1.14181</state>
+                    <state>8.11.3.13977</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -116,7 +116,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>26</version>
+                    <version>25</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -133,7 +133,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>26</version>
+                    <version>25</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -156,7 +156,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>26</version>
+                    <version>25</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -244,11 +244,11 @@
                 </option>
                 <option>
                     <name>CCListAssFile</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CCListAssSource</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CCEnableRemarks</name>
@@ -317,7 +317,7 @@
                 </option>
                 <option>
                     <name>CCCompilerRuntimeInfo</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>IFpuProcessor</name>
@@ -361,7 +361,7 @@
                 </option>
                 <option>
                     <name>CCOptLevel</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCOptStrategy</name>
@@ -370,7 +370,7 @@
                 </option>
                 <option>
                     <name>CCOptLevelSlave</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CompilerMisraRules98</name>
@@ -808,7 +808,7 @@
                 </option>
                 <option>
                     <name>IlinkAdditionalLibs</name>
-                    <state></state>
+                    <state>$PROJ_DIR$\..\..\..\driverlib\ewarm-cm3\Exe\driverlib-cm3.a</state>
                 </option>
                 <option>
                     <name>IlinkOverrideProgramEntryLabel</name>
@@ -1135,7 +1135,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>26</version>
+                    <version>25</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -1152,7 +1152,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>26</version>
+                    <version>25</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -1175,7 +1175,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>26</version>
+                    <version>25</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -2035,6 +2035,9 @@
         </settings>
     </configuration>
     <file>
+        <name>$PROJ_DIR$\..\..\..\..\Users\Raj\Desktop\Embedded Systems\project2_update\BoolInclude.h</name>
+    </file>
+    <file>
         <name>$PROJ_DIR$\compute.c</name>
     </file>
     <file>
@@ -2045,9 +2048,6 @@
     </file>
     <file>
         <name>$PROJ_DIR$\display.h</name>
-    </file>
-    <file>
-        <name>$PROJ_DIR$\..\..\..\driverlib\ewarm-cm3\Exe\driverlib-cm3.a</name>
     </file>
     <file>
         <name>$PROJ_DIR$\GlobalCounter.c</name>

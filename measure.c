@@ -36,7 +36,7 @@ void Measure(void * voidMeasureDataPtr) {
         *addCompute = 1;
         break;
     }
-    runMeasure = 0;
+   // runDisplay = 1;
   }
   
 }

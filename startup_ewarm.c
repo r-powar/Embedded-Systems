@@ -3,7 +3,7 @@
 // startup_ewarm.c - Startup code for use with IAR's Embedded Workbench,
 //                   version 5.
 //
-// Copyright (c) 2006-2013 Texas Instruments Incorporated.  All rights reserved.
+// Copyright (c) 2006-2010 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
 // 
 // Texas Instruments (TI) is supplying this software for use solely and
@@ -19,7 +19,7 @@
 // CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
 // DAMAGES, FOR ANY REASON WHATSOEVER.
 // 
-// This is part of revision 10636 of the EK-LM3S8962 Firmware Package.
+// This is part of revision 6075 of the EK-LM3S8962 Firmware Package.
 //
 //*****************************************************************************
 
@@ -35,18 +35,9 @@
 // Forward declaration of the default fault handlers.
 //
 //*****************************************************************************
-void ResetISR(void);
 static void NmiSR(void);
 static void FaultISR(void);
 static void IntDefaultHandler(void);
-
-//*****************************************************************************
-//
-// External declarations for the interrupt handlers used by the application.
-//
-//*****************************************************************************
-extern void Timer0IntHandler(void);
-extern void Timer1IntHandler(void);
 
 //*****************************************************************************
 //
@@ -54,7 +45,9 @@ extern void Timer1IntHandler(void);
 //
 //*****************************************************************************
 extern void __iar_program_start(void);
-
+extern void dirPressedHandler();
+extern void selectPressedHandler();
+extern void Timer0IntHandler();
 //*****************************************************************************
 //
 // Reserve space for the system stack.
@@ -86,7 +79,7 @@ __root const uVectorEntry __vector_table[] @ ".intvec" =
 {
     { .ulPtr = (unsigned long)pulStack + sizeof(pulStack) },
                                             // The initial stack pointer
-    ResetISR,                               // The reset handler
+    __iar_program_start,                    // The reset handler
     NmiSR,                                  // The NMI handler
     FaultISR,                               // The hard fault handler
     IntDefaultHandler,                      // The MPU fault handler
@@ -105,7 +98,7 @@ __root const uVectorEntry __vector_table[] @ ".intvec" =
     IntDefaultHandler,                      // GPIO Port B
     IntDefaultHandler,                      // GPIO Port C
     IntDefaultHandler,                      // GPIO Port D
-    IntDefaultHandler,                      // GPIO Port E
+    dirPressedHandler,                      // GPIO Port E
     IntDefaultHandler,                      // UART0 Rx and Tx
     IntDefaultHandler,                      // UART1 Rx and Tx
     IntDefaultHandler,                      // SSI0 Rx and Tx
@@ -122,7 +115,7 @@ __root const uVectorEntry __vector_table[] @ ".intvec" =
     IntDefaultHandler,                      // Watchdog timer
     Timer0IntHandler,                      // Timer 0 subtimer A
     IntDefaultHandler,                      // Timer 0 subtimer B
-    Timer1IntHandler,                      // Timer 1 subtimer A
+    IntDefaultHandler,                      // Timer 1 subtimer A
     IntDefaultHandler,                      // Timer 1 subtimer B
     IntDefaultHandler,                      // Timer 2 subtimer A
     IntDefaultHandler,                      // Timer 2 subtimer B
@@ -131,7 +124,7 @@ __root const uVectorEntry __vector_table[] @ ".intvec" =
     IntDefaultHandler,                      // Analog Comparator 2
     IntDefaultHandler,                      // System Control (PLL, OSC, BO)
     IntDefaultHandler,                      // FLASH Control
-    IntDefaultHandler,                      // GPIO Port F
+    selectPressedHandler,                      // GPIO Port F
     IntDefaultHandler,                      // GPIO Port G
     IntDefaultHandler,                      // GPIO Port H
     IntDefaultHandler,                      // UART2 Rx and Tx
@@ -146,25 +139,6 @@ __root const uVectorEntry __vector_table[] @ ".intvec" =
     IntDefaultHandler,                      // Ethernet
     IntDefaultHandler                       // Hibernate
 };
-
-//*****************************************************************************
-//
-// This is the code that gets called when the processor first starts execution
-// following a reset event.  Only the absolutely necessary set is performed,
-// after which the application supplied entry() routine is called.  Any fancy
-// actions (such as making decisions based on the reset cause register, and
-// resetting the bits in that register) are left solely in the hands of the
-// application.
-//
-//*****************************************************************************
-void
-ResetISR(void)
-{
-    //
-    // Call the application's entry point.
-    //
-    __iar_program_start();
-}
 
 //*****************************************************************************
 //

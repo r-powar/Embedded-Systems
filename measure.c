@@ -12,8 +12,7 @@
  //constant variable
  
 void Measure(void * voidMeasureDataPtr) {
-  if(runMeasure ==1){
-    
+  while(1) { 
     MeasureData * measureDataPtr = voidMeasureDataPtr;
     unsigned int * tempRaw = measureDataPtr->temperatureRawBuf;
     unsigned int * sysPRaw = measureDataPtr->bloodPressRawBuf;
@@ -36,7 +35,7 @@ void Measure(void * voidMeasureDataPtr) {
         *addCompute = 1;
         break;
     }
-    runMeasure = 0;
+    vTaskDelay(1000);
   }
   
 }

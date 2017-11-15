@@ -31,39 +31,42 @@
 bool LEDOn = false;
 
 void WarningAlarm(void * voidWarningAlarmDataPtr) {
-  // Maddie: changed to voidWarningAlarmDataPtr
-  WarningAlarmData * warningAlarmDataPtr = voidWarningAlarmDataPtr;
-  int alarmDelay;
-  bool alarmOn = false;
-  
-  if (*warningAlarmDataPtr->pulseRateRawBuf >= HIGH_PULSE_RAW ||
-      *warningAlarmDataPtr->pulseRateRawBuf <= LOW_PULSE_RAW)
-  {
-    alarmOn = true;
-    alarmDelay = PULSE_DELAY;
-  }
-  if (*warningAlarmDataPtr->temperatureRawBuf >= HIGH_TEMP_RAW ||
-      *warningAlarmDataPtr->temperatureRawBuf <= LOW_TEMP_RAW)
-  {
-    alarmOn = true;
-    alarmDelay = TEMP_DELAY;
-  }
-  if (*warningAlarmDataPtr->bloodPressRawBuf >= 100 ||
-      *warningAlarmDataPtr->bloodPressRawBuf+8 <= DIASTOLIC_RAW)
-  {
-    if(rightPressed != 1) {
-      PWMGenEnable(PWM_BASE, PWM_GEN_0); // Turn on the speaker
-      
+  while(1) {
+    // Maddie: changed to voidWarningAlarmDataPtr
+    WarningAlarmData * warningAlarmDataPtr = voidWarningAlarmDataPtr;
+    int alarmDelay;
+    bool alarmOn = false;
+    
+    if (*warningAlarmDataPtr->pulseRateRawBuf >= HIGH_PULSE_RAW ||
+        *warningAlarmDataPtr->pulseRateRawBuf <= LOW_PULSE_RAW)
+    {
+      alarmOn = true;
+      alarmDelay = PULSE_DELAY;
     }
-    alarmOn = true;
-    alarmDelay = BP_DELAY;
+    if (*warningAlarmDataPtr->temperatureRawBuf >= HIGH_TEMP_RAW ||
+        *warningAlarmDataPtr->temperatureRawBuf <= LOW_TEMP_RAW)
+    {
+      alarmOn = true;
+      alarmDelay = TEMP_DELAY;
+    }
+    if (*warningAlarmDataPtr->bloodPressRawBuf >= 100 ||
+        *warningAlarmDataPtr->bloodPressRawBuf+8 <= DIASTOLIC_RAW)
+    {
+      if(rightPressed != 1) {
+        PWMGenEnable(PWM_BASE, PWM_GEN_0); // Turn on the speaker
+        
+      }
+      alarmOn = true;
+      alarmDelay = BP_DELAY;
+    }
+    if (*warningAlarmDataPtr->batteryState <= LOW_BATTERY)
+    {
+      alarmOn = true;
+      alarmDelay = BATTERY_DELAY;
+    }
+    blinky(alarmDelay, alarmOn);
+    vTaskDelay(1000);
   }
-  if (*warningAlarmDataPtr->batteryState <= LOW_BATTERY)
-  {
-    alarmOn = true;
-    alarmDelay = BATTERY_DELAY;
-  }
-  blinky(alarmDelay, alarmOn);
 }
 
 void blinky(unsigned long aValue, bool alarmOn)

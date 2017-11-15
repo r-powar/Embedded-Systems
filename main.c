@@ -1,25 +1,50 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include "ProjectStructs.h"
-#include "BoolInclude.h"
-#include "TCB.h"
-#include "inc/lm3s8962.h"
-#include "GlobalCounter.h"
-#include "inc/lm3s8962.h"
-#include "inc/hw_gpio.h"
-#include "inc/hw_ints.h"
-#include "inc/hw_memmap.h"
-#include "inc/hw_types.h"
-#include "driverlib/debug.h"
-#include "driverlib/gpio.h"
-#include "driverlib/interrupt.h"
-#include "driverlib/systick.h"
-#include "driverlib/sysctl.h"
-#include "drivers/rit128x96x4.h"
-#include  <utils/uartstdio.c>
-#include "driverlib/pwm.h"
-#include "driverlib/timer.h"
+#define mainINCLUDE_WEB_SERVER		0
 
+
+/* Standard includes. */
+#include <stdio.h>
+#include <string.h>
+
+/* Scheduler includes. */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "semphr.h"
+
+/* Hardware library includes. */
+#include "hw_memmap.h"
+#include "hw_types.h"
+#include "hw_sysctl.h"
+#include "sysctl.h"
+#include "gpio.h"
+#include "grlib.h"
+#include "rit128x96x4.h"
+#include "osram128x64x4.h"
+#include "formike128x128x16.h"
+#include "inc/hw_ints.h"
+
+/* Demo app includes. */
+#include "BlockQ.h"
+#include "death.h"
+#include "integer.h"
+#include "blocktim.h"
+#include "flash.h"
+#include "partest.h"
+#include "semtest.h"
+#include "PollQ.h"
+#include "lcd_message.h"
+#include "bitmap.h"
+#include "GenQTest.h"
+#include "QPeek.h"
+#include "recmutex.h"
+#include "IntQueue.h"
+#include "QueueSet.h"
+#include "EventGroupsDemo.h"
+#include "GlobalCounter.c"
+#include "driverlib/pwm.h"
+#include "projectStructs.h"
+#include "TCB.h"
+#include "utils/ustdlib.c"
 //given delay function
 void delay(unsigned long aValue);
 
@@ -38,34 +63,6 @@ void Schedule(void * voidSchedulerDataPtr);
 //*****************************************************************************
 unsigned long g_ulFlags;
 unsigned int ulPeriod;
-
-//*****************************************************************************
-//
-// The interrupt handler for the first timer interrupt.
-//
-//*****************************************************************************
-void
-Timer0IntHandler(void)
-{
-  //
-  // Clear the timer interrupt.
-  //
-  TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
-
-  //
-  // Toggle the flag for the first timer.
-  //
-  HWREGBITW(&g_ulFlags, 0) ^= 1;
-
-  //
-  // Update the interrupt status on the display.
-  //
-  
-  globalCounter++;
-  IntMasterDisable();
-  //RIT128x96x4StringDraw(HWREGBITW(&g_ulFlags, 0) ? "1" : "0", 48, 32, 15);
-  IntMasterEnable();
-}
 
 //handle select interrupts
 void selectPressedHandler(void){//port F pin 1
@@ -98,9 +95,101 @@ void dirPressedHandler(void){//port E pins 0-3 up down left right
 }
 
 
-typedef struct DataStruct DataStruct;
-void main (void)
+
+/*-----------------------------------------------------------*/
+
+/* The time between cycles of the 'check' functionality (defined within the
+tick hook. */
+#define mainCHECK_DELAY						( ( TickType_t ) 5000 / portTICK_PERIOD_MS )
+
+/* Size of the stack allocated to the uIP task. */
+#define mainBASIC_WEB_STACK_SIZE            ( configMINIMAL_STACK_SIZE * 3 )
+
+/* The OLED task uses the sprintf function so requires a little more stack too. */
+#define mainOLED_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE + 50 )
+
+/* Task priorities. */
+#define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2 )
+#define mainCHECK_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
+#define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
+#define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2 )
+#define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 3 )
+#define mainINTEGER_TASK_PRIORITY           ( tskIDLE_PRIORITY )
+#define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
+
+/* The maximum number of message that can be waiting for display at any one
+time. */
+#define mainOLED_QUEUE_SIZE					( 3 )
+
+/* Dimensions the buffer into which the jitter time is written. */
+#define mainMAX_MSG_LEN						25
+
+/* The period of the system clock in nano seconds.  This is used to calculate
+the jitter time in nano seconds. */
+#define mainNS_PER_CLOCK					( ( unsigned long ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
+
+/* Constants used when writing strings to the display. */
+#define mainCHARACTER_HEIGHT				( 9 )
+#define mainMAX_ROWS_128					( mainCHARACTER_HEIGHT * 14 )
+#define mainMAX_ROWS_96						( mainCHARACTER_HEIGHT * 10 )
+#define mainMAX_ROWS_64						( mainCHARACTER_HEIGHT * 7 )
+#define mainFULL_SCALE						( 15 )
+#define ulSSI_FREQUENCY						( 3500000UL )
+
+/*-----------------------------------------------------------*/
+
+/*
+ * The task that handles the uIP stack.  All TCP/IP processing is performed in
+ * this task.
+ */
+extern void vuIP_Task( void *pvParameters );
+
+/*
+ * The display is written two by more than one task so is controlled by a
+ * 'gatekeeper' task.  This is the only task that is actually permitted to
+ * access the display directly.  Other tasks wanting to display a message send
+ * the message to the gatekeeper.
+ */
+static void vOLEDTask( void *pvParameters );
+
+/*
+ * Configure the hardware for the demo.
+ */
+static void prvSetupHardware( void );
+
+/*
+ * Configures the high frequency timers - those used to measure the timing
+ * jitter while the real time kernel is executing.
+ */
+extern void vSetupHighFrequencyTimer( void );
+
+/*
+ * Hook functions that can get called by the kernel.
+ */
+void vApplicationStackOverflowHook( TaskHandle_t *pxTask, signed char *pcTaskName );
+void vApplicationTickHook( void );
+
+
+/*-----------------------------------------------------------*/
+
+/* The queue used to send messages to the OLED task. */
+QueueHandle_t xOLEDQueue;
+
+/* The welcome text. */
+const char * const pcWelcomeMessage = "   www.FreeRTOS.org";
+
+/*-----------------------------------------------------------*/
+
+
+/*************************************************************************
+ * Please ensure to read http://www.freertos.org/portlm3sx965.html
+ * which provides information on configuring and running this demo for the
+ * various Luminary Micro EKs.
+ *************************************************************************/
+int main( void )
 {
+  
+    //setup for hardware shizz
   //
   // Set the clocking to run directly from the crystal.
   //
@@ -146,24 +235,9 @@ void main (void)
    PWMGenPeriodSet(PWM_BASE, PWM_GEN_0, ulPeriod);
    PWMPulseWidthSet(PWM_BASE, PWM_OUT_0, ulPeriod / 4);
    PWMPulseWidthSet(PWM_BASE, PWM_OUT_1, ulPeriod * 3 / 4);
+   RIT128x96x4Init(1000000);
    
-  //
-  // Enable the PWM0 and PWM1 output signals.
-  //
-  PWMOutputState(PWM_BASE, PWM_OUT_0_BIT | PWM_OUT_1_BIT, true);
-    
-  //timer interrupt stuff
-  SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
-  IntMasterEnable();
-  TimerConfigure(TIMER0_BASE, TIMER_CFG_32_BIT_PER);
-  TimerLoadSet(TIMER0_BASE, TIMER_A, SysCtlClockGet());
-  IntEnable(INT_TIMER0A);
-  TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
-  TimerEnable(TIMER0_BASE, TIMER_A);
-  
-  RIT128x96x4Init(1000000);
-  
-  //initialize defaults
+   //initialize defaults
   unsigned int tempDefault = 75;
   unsigned int sysDefault = 80;
   unsigned int diaDefault = 80;
@@ -195,7 +269,48 @@ void main (void)
   unsigned short int * alarmAcknowledge = &alarmAcknowledgeDefault;
   unsigned short int * addCompute = &addComputeDefault;
   unsigned short int * addCommunications = &addCommunicationsDefault;
-  //create the TCB for Measure
+  
+  //
+  // Enable the PWM0 and PWM1 output signals.
+  //
+  PWMOutputState(PWM_BASE, PWM_OUT_0_BIT | PWM_OUT_1_BIT, true);
+    prvSetupHardware();
+
+    /* Create the queue used by the OLED task.  Messages for display on the OLED
+    are received via this queue. */
+  QueueHandle_t xOLEDQueue = xQueueCreate( mainOLED_QUEUE_SIZE, sizeof( xOLEDMessage ) );
+    /* Start the standard demo tasks. */
+    vStartIntegerMathTasks( mainINTEGER_TASK_PRIORITY );
+    vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
+    vStartInterruptQueueTasks();
+    vStartRecursiveMutexTasks();
+    vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+    vCreateBlockTimeTasks();
+    vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+    vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+    vStartQueuePeekTasks();
+    vStartQueueSetTasks();
+    vStartEventGroupTasks();
+
+    /* Exclude some tasks if using the kickstart version to ensure we stay within
+    the 32K code size limit. */
+    #if mainINCLUDE_WEB_SERVER != 0
+    {
+        /* Create the uIP task if running on a processor that includes a MAC and
+        PHY. */
+        if( SysCtlPeripheralPresent( SYSCTL_PERIPH_ETH ) )
+        {
+                xTaskCreate( vuIP_Task, "uIP", mainBASIC_WEB_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY - 1, NULL );
+        }
+    }
+    #endif
+
+
+
+    /* Start the tasks defined within this file/specific to this demo. */
+    
+    
+    //create the TCB for Measure
   MeasureData * measureDataPtr;
   measureDataPtr = (struct MeasureData *) malloc(sizeof(struct MeasureData));
   measureDataPtr->temperatureRawBuf = temperatureRaw;
@@ -205,21 +320,8 @@ void main (void)
   measureDataPtr->addCompute = addCompute;
   //Make a void pointer to datastruct for measure
   void * voidMeasureDataPtr = measureDataPtr;
-  //instantiate Task Control Block for Measure
-  TCB * TCBMeasure;
-  TCBMeasure = (TCB *) malloc(sizeof(TCB));
-  //Create the pointer to the Measure method
-  void (* measurePtr)(void*);
-  //assign pointer to function Measure
-  measurePtr = Measure;
-  //fill the TCB with revelvent method and data pointers
-  TCBMeasure->myTask = measurePtr;
-  TCBMeasure->taskDataPtr = voidMeasureDataPtr;
   
-  //set measure to the front of the linked list
-  TCB * head = TCBMeasure;
-  TCB * curr = head;
-  curr->prev = NULL;
+  xTaskCreate( Measure, "MEASURE", 100, voidMeasureDataPtr, 1, NULL );
   
   //create the TCB for Compute
   ComputeData * computeDataPtr;
@@ -234,16 +336,8 @@ void main (void)
   computeDataPtr->prCorrectedBuf = prCorrected;
   //Make a void pointer to datastruct for Compute
   void * voidComputeDataPtr = computeDataPtr;
-  //instantiate Task Control Block for Compute
-  TCB * TCBCompute;
-  TCBCompute = (TCB *) malloc(sizeof(TCB));
-  //Create the pointer to the Compute method
-  void (* computePtr)(void*);
-  //assign pointer to function Compute
-  computePtr = Compute;
- //fill the TCB with revelvent method and data pointers
-  TCBCompute->myTask = computePtr;
-  TCBCompute->taskDataPtr = voidComputeDataPtr;
+  
+  xTaskCreate( Compute, "COMPUTE", 100, voidComputeDataPtr, 1, NULL );
   
   //create the TCB for Keypad
   KeypadData * keypadDataPtr;
@@ -255,21 +349,9 @@ void main (void)
   keypadDataPtr->alarmAcknowledge = alarmAcknowledge;    
   //Make a void pointer to datastruct for Keypad
   void * voidKeypadDataPtr = keypadDataPtr;
-  //instantiate Task Control Block for Keypad
-  TCB * TCBKeypad;
-  TCBKeypad = (TCB *) malloc(sizeof(TCB));
-  //Create the pointer to the Keypad
-  void (* keypadPtr)(void*);
-  //assign pointer to function Keypad
-  keypadPtr = Keypad;
-  //fill the TCB with revelvent method and data pointers
-  TCBKeypad->myTask = keypadPtr;
-  TCBKeypad->taskDataPtr = voidKeypadDataPtr;
   
-  //keypad is always in the queue
-  TCBKeypad->prev = curr;
-  curr->next = TCBKeypad;
-  curr = curr->next;
+  xTaskCreate( Keypad, "KEYPAD", 100, voidKeypadDataPtr, 1, NULL );
+  
   
   //create the TCB for Display
   DisplayData * displayDataPtr;
@@ -285,21 +367,8 @@ void main (void)
   displayDataPtr->measurementSelection = measureSelect;
   //Make a void pointer to datastruct for display
   void * voidDisplayDataPtr = displayDataPtr;
-  //instantiate Task Control Block for display
-  TCB * TCBDisplay;
-  TCBDisplay = (TCB *) malloc(sizeof(TCB));
-  //Create the pointer to the display method
-  void (* displayPtr)(void*);
-  //assign pointer to function Display
-  displayPtr = Display;
-  //fill the TCB with revelvent method and data pointers
-  TCBDisplay->myTask = displayPtr;
-  TCBDisplay->taskDataPtr = voidDisplayDataPtr;
   
-  //display should be in the queue for the first run, then only added when keypad is pressed
-  TCBDisplay->prev = curr;
-  curr->next = TCBDisplay;
-  curr = curr->next;
+  xTaskCreate(Display, "DISPLAY", 100, voidDisplayDataPtr, 1, NULL );
   
   //create the TCB for WarningAlarm
   WarningAlarmData * warningAlarmDataPtr;
@@ -312,21 +381,8 @@ void main (void)
   warningAlarmDataPtr->batteryState = batteryState;
   //Make a void pointer to datastruct for WarningAlarm
   void * voidWarningAlarmDataPtr = warningAlarmDataPtr;
-  //instantiate Task Control Block for WarningAlarm
-  TCB * TCBWarningAlarm;
-  TCBWarningAlarm = (TCB *) malloc(sizeof(TCB));
-  //Create the pointer to the WarningAlarm method
-  void (* warningAlarmPtr)(void*);
-  //assign pointer to function WarningAlarm
-  warningAlarmPtr = WarningAlarm;
-  //fill the TCB with revelvent method and data pointers
-  TCBWarningAlarm->myTask = warningAlarmPtr;
-  TCBWarningAlarm->taskDataPtr = voidWarningAlarmDataPtr;
   
-  //warningalarm is always in the queue
-  TCBWarningAlarm->prev = curr;
-  curr->next = TCBWarningAlarm;
-  curr = curr->next;
+  xTaskCreate(WarningAlarm, "WARNALARM", 100, voidWarningAlarmDataPtr, 1, NULL );
   
   //create the TCB for Communications
   CommunicationsData * communicationsDataPtr;
@@ -338,16 +394,8 @@ void main (void)
   communicationsDataPtr->prCorrectedBuf = prCorrected;
   //Make a void pointer to datastruct for Communications
   void * voidCommunicationsDataPtr = communicationsDataPtr;
-  //instantiate Task Control Block for Communications
-  TCB * TCBCommunications;
-  TCBCommunications = (TCB *) malloc(sizeof(TCB));
-  //Create the pointer to the Communications method
-  void (* communicationsPtr)(void*);
-  //assign pointer to function WarningAlarm
-  communicationsPtr = Communications;
-  //fill the TCB with revelvent method and data pointers
-  TCBCommunications->myTask = communicationsPtr;
-  TCBCommunications->taskDataPtr = voidCommunicationsDataPtr;
+  
+  xTaskCreate(Communications, "COMMUNICATIONS", 100, voidCommunicationsDataPtr, 1, NULL );
   
   //create the TCB for StatusMethod
   Status * statusPtr;
@@ -356,21 +404,8 @@ void main (void)
   statusPtr->batteryState = batteryState;
   //Make a void pointer to datastruct for StatusMethod
   void * voidStatusPtr = statusPtr;
-  //instantiate Task Control Block for StatusMethod
-  TCB * TCBStatusMethod;
-  TCBStatusMethod = (TCB *) malloc(sizeof(TCB));
-  //Create the pointer to the StatusMethod method
-  void (* statusMethodPtr)(void*);
-  //assign pointer to function StatusMethod
-  statusMethodPtr = StatusMethod;
-  //fill the TCB with revelvent method and data pointers
-  TCBStatusMethod->myTask = statusMethodPtr;
-  TCBStatusMethod->taskDataPtr = voidStatusPtr;
   
-  //status is always in the queue
-  TCBStatusMethod->prev = curr;
-  curr->next = TCBStatusMethod;
-  curr = curr->next;
+  xTaskCreate(StatusMethod, "STATUSMETHOD", 100, voidStatusPtr, 1, NULL );
   
   //create the TCB for Scheduler
   SchedulerData * schedulerDataPtr;
@@ -390,36 +425,40 @@ void main (void)
   //fill the TCB with revelvent method and data pointers
   TCBScheduler->myTask = schedulerPtr;
   TCBScheduler->taskDataPtr = voidSchedulerPtr;
-  
-  curr->next = NULL;
-  curr = head;
-  while (1){
-    while (curr != NULL) {   
-      curr->myTask(curr->taskDataPtr);
-      curr=curr->next;
-    }
-    TCBScheduler->myTask(TCBScheduler->taskDataPtr);
-    //need to move this functionality into the scheduler, but need to do this for now
-    if (*addCompute == 1) {
-      *addCompute = 0;
-      TCBCompute->myTask(TCBCompute->taskDataPtr);
-    }
-    if (*addCommunications == 1) {
-      *addCommunications = 0;
-      TCBCommunications->myTask(TCBCommunications->taskDataPtr);
-    }
-    curr = head;
-  }
+    
+  xTaskCreate(Schedule, "SCHEDULE", 100, voidSchedulerPtr, 1, NULL );
+    
+   
+    
+   // xTaskCreate( vOLEDTask, "OLED", mainOLED_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+
+    /* The suicide tasks must be created last as they need to know how many
+    tasks were running prior to their creation in order to ascertain whether
+    or not the correct/expected number of tasks are running at any given time. */
+    vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+
+    /* Configure the high frequency interrupt used to measure the interrupt
+    jitter time. */
+    vSetupHighFrequencyTimer();
+
+    /* Start the scheduler. */
+    vTaskStartScheduler();
+
+    /* Will only get here if there was insufficient memory to create the idle
+    task. */
+    return 0;
 }
 void Schedule(void * voidSchedulerDataPtr) {
-  if(globalCounter%5 == 0){
-    delay(15);
-    runMeasure = 1;
+  while(1) {
+    delay(20);
+    globalCounter++;
+    vTaskDelay(1000);
   }
 }
 //Keypad method should be moved into its own class
 void Keypad(void * voidKeypadDataPtr) {
-  KeypadData * keypadDataPtr = voidKeypadDataPtr;
+  while (1) {
+    KeypadData * keypadDataPtr = voidKeypadDataPtr;
   unsigned short int * mode = keypadDataPtr->mode;
   unsigned short int * measurementSelection = keypadDataPtr->measurementSelection;
   unsigned short int * scroll = keypadDataPtr->scroll;
@@ -470,9 +509,13 @@ void Keypad(void * voidKeypadDataPtr) {
     *scroll = 0;
     leftPressed = 0;
   }
+    vTaskDelay(1000);
+  }
 }
 void Communications (void * voidCommunicationsDataPtr) { 
-  
+  while(1) {
+    vTaskDelay(1000);
+  }
 }
 void delay(unsigned long aValue){
   volatile unsigned long i = 0;
@@ -482,4 +525,217 @@ void delay(unsigned long aValue){
     for (j = 0; j < 100000; j++);
   }
   return;
+}
+
+
+
+
+
+
+
+/*-----------------------------------------------------------*/
+
+void prvSetupHardware( void )
+{
+    /* If running on Rev A2 silicon, turn the LDO voltage up to 2.75V.  This is
+    a workaround to allow the PLL to operate reliably. */
+    if( DEVICE_IS_REVA2 )
+    {
+        SysCtlLDOSet( SYSCTL_LDO_2_75V );
+    }
+
+	/* Set the clocking to run from the PLL at 50 MHz */
+	SysCtlClockSet( SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_8MHZ );
+
+	/* 	Enable Port F for Ethernet LEDs
+		LED0        Bit 3   Output
+		LED1        Bit 2   Output */
+	SysCtlPeripheralEnable( SYSCTL_PERIPH_GPIOF );
+	GPIODirModeSet( GPIO_PORTF_BASE, (GPIO_PIN_2 | GPIO_PIN_3), GPIO_DIR_MODE_HW );
+	GPIOPadConfigSet( GPIO_PORTF_BASE, (GPIO_PIN_2 | GPIO_PIN_3 ), GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD );
+
+	vParTestInitialise();
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationTickHook( void )
+{
+static xOLEDMessage xMessage = { "PASS" };
+static unsigned long ulTicksSinceLastDisplay = 0;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+
+	/* Called from every tick interrupt.  Have enough ticks passed to make it
+	time to perform our health status check again? */
+	ulTicksSinceLastDisplay++;
+	if( ulTicksSinceLastDisplay >= mainCHECK_DELAY )
+	{
+		ulTicksSinceLastDisplay = 0;
+
+		/* Has an error been found in any task? */
+		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+		{
+			xMessage.pcMessage = "ERROR IN GEN Q";
+		}
+	    else if( xIsCreateTaskStillRunning() != pdTRUE )
+	    {
+	        xMessage.pcMessage = "ERROR IN CREATE";
+	    }
+	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+	    {
+	        xMessage.pcMessage = "ERROR IN MATH";
+	    }
+		else if( xAreIntQueueTasksStillRunning() != pdTRUE )
+		{
+			xMessage.pcMessage = "ERROR IN INT QUEUE";
+		}
+		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
+		{
+			xMessage.pcMessage = "ERROR IN BLOCK Q";
+		}
+		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+		{
+			xMessage.pcMessage = "ERROR IN BLOCK TIME";
+		}
+		else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+		{
+			xMessage.pcMessage = "ERROR IN SEMAPHORE";
+		}
+		else if( xArePollingQueuesStillRunning() != pdTRUE )
+		{
+			xMessage.pcMessage = "ERROR IN POLL Q";
+		}
+		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+		{
+			xMessage.pcMessage = "ERROR IN PEEK Q";
+		}
+		else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+		{
+			xMessage.pcMessage = "ERROR IN REC MUTEX";
+		}
+		else if( xAreQueueSetTasksStillRunning() != pdPASS )
+		{
+			xMessage.pcMessage = "ERROR IN Q SET";
+		}
+		else if( xAreEventGroupTasksStillRunning() != pdTRUE )
+		{
+			xMessage.pcMessage = "ERROR IN EVNT GRP";
+		}
+
+		configASSERT( strcmp( ( const char * ) xMessage.pcMessage, "PASS" ) == 0 );
+
+		/* Send the message to the OLED gatekeeper for display. */
+		xHigherPriorityTaskWoken = pdFALSE;
+		xQueueSendFromISR( xOLEDQueue, &xMessage, &xHigherPriorityTaskWoken );
+	}
+
+	/* Write to a queue that is in use as part of the queue set demo to
+	demonstrate using queue sets from an ISR. */
+	vQueueSetAccessQueueSetFromISR();
+
+	/* Call the event group ISR tests. */
+	vPeriodicEventGroupsProcessing();
+}
+/*-----------------------------------------------------------*/
+
+void vOLEDTask( void *pvParameters )
+{
+xOLEDMessage xMessage;
+unsigned long ulY, ulMaxY;
+static char cMessage[ mainMAX_MSG_LEN ];
+extern volatile unsigned long ulMaxJitter;
+const unsigned char *pucImage;
+
+/* Functions to access the OLED.  The one used depends on the dev kit
+being used. */
+void ( *vOLEDInit )( unsigned long ) = NULL;
+void ( *vOLEDStringDraw )( const char *, unsigned long, unsigned long, unsigned char ) = NULL;
+void ( *vOLEDImageDraw )( const unsigned char *, unsigned long, unsigned long, unsigned long, unsigned long ) = NULL;
+void ( *vOLEDClear )( void ) = NULL;
+
+	/* Map the OLED access functions to the driver functions that are appropriate
+	for the evaluation kit being used. */
+	switch( HWREG( SYSCTL_DID1 ) & SYSCTL_DID1_PRTNO_MASK )
+	{
+		case SYSCTL_DID1_PRTNO_6965	:
+		case SYSCTL_DID1_PRTNO_2965	:	vOLEDInit = OSRAM128x64x4Init;
+										vOLEDStringDraw = OSRAM128x64x4StringDraw;
+										vOLEDImageDraw = OSRAM128x64x4ImageDraw;
+										vOLEDClear = OSRAM128x64x4Clear;
+										ulMaxY = mainMAX_ROWS_64;
+										pucImage = pucBasicBitmap;
+										break;
+
+		case SYSCTL_DID1_PRTNO_1968	:
+		case SYSCTL_DID1_PRTNO_8962 :	vOLEDInit = RIT128x96x4Init;
+										vOLEDStringDraw = RIT128x96x4StringDraw;
+										vOLEDImageDraw = RIT128x96x4ImageDraw;
+										vOLEDClear = RIT128x96x4Clear;
+										ulMaxY = mainMAX_ROWS_96;
+										pucImage = pucBasicBitmap;
+										break;
+
+		default						:	vOLEDInit = vFormike128x128x16Init;
+										vOLEDStringDraw = vFormike128x128x16StringDraw;
+										vOLEDImageDraw = vFormike128x128x16ImageDraw;
+										vOLEDClear = vFormike128x128x16Clear;
+										ulMaxY = mainMAX_ROWS_128;
+										pucImage = pucGrLibBitmap;
+										break;
+
+	}
+
+	ulY = ulMaxY;
+
+	/* Initialise the OLED and display a startup message. */
+	vOLEDInit( ulSSI_FREQUENCY );
+	vOLEDStringDraw( "POWERED BY FreeRTOS", 0, 0, mainFULL_SCALE );
+	vOLEDImageDraw( pucImage, 0, mainCHARACTER_HEIGHT + 1, bmpBITMAP_WIDTH, bmpBITMAP_HEIGHT );
+
+	for( ;; )
+	{
+		/* Wait for a message to arrive that requires displaying. */
+		xQueueReceive( xOLEDQueue, &xMessage, portMAX_DELAY );
+
+		/* Write the message on the next available row. */
+		ulY += mainCHARACTER_HEIGHT;
+		if( ulY >= ulMaxY )
+		{
+			ulY = mainCHARACTER_HEIGHT;
+			vOLEDClear();
+			vOLEDStringDraw( pcWelcomeMessage, 0, 0, mainFULL_SCALE );
+		}
+
+		/* Display the message along with the maximum jitter time from the
+		high priority time test. */
+		sprintf( cMessage, "%s [%uns]", xMessage.pcMessage, ulMaxJitter * mainNS_PER_CLOCK );
+		vOLEDStringDraw( cMessage, 0, ulY, mainFULL_SCALE );
+	}
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationStackOverflowHook( TaskHandle_t *pxTask, signed char *pcTaskName )
+{
+	( void ) pxTask;
+	( void ) pcTaskName;
+
+	for( ;; );
+}
+/*-----------------------------------------------------------*/
+
+void vAssertCalled( const char *pcFile, unsigned long ulLine )
+{
+volatile unsigned long ulSetTo1InDebuggerToExit = 0;
+
+	taskENTER_CRITICAL();
+	{
+		while( ulSetTo1InDebuggerToExit == 1 )
+		{
+			/* Nothing do do here.  Set the loop variable to a non zero value in
+			the debugger to step out of this function to the point that caused
+			the assertion. */
+			( void ) pcFile;
+			( void ) ulLine;
+		}
+	}
+	taskEXIT_CRITICAL();
 }

@@ -15,13 +15,16 @@
 #define PULSE_RATE_RATIO 3
 
 void Compute(void * voidComputeDataPtr) {
-  // Maddie: changed to voidComputeDataPtr
-  ComputeData * computeDataPtr = voidComputeDataPtr;
-  //perform conversions and corrections
-  convertToCelsius(computeDataPtr, computeDataPtr->temperatureRawBuf);
-  diasPressConversion(computeDataPtr, computeDataPtr->bloodPressRawBuf);
-  sysPressConversion(computeDataPtr, computeDataPtr->bloodPressRawBuf+8);
-  pulseRateConversion(computeDataPtr, computeDataPtr->pulseRateRawBuf);  
+  while(1) { 
+    // Maddie: changed to voidComputeDataPtr
+    ComputeData * computeDataPtr = voidComputeDataPtr;
+    //perform conversions and corrections
+    convertToCelsius(computeDataPtr, computeDataPtr->temperatureRawBuf);
+    diasPressConversion(computeDataPtr, computeDataPtr->bloodPressRawBuf);
+    sysPressConversion(computeDataPtr, computeDataPtr->bloodPressRawBuf+8);
+    pulseRateConversion(computeDataPtr, computeDataPtr->pulseRateRawBuf);  
+    vTaskDelay(1000);
+  }
   
 }
 

@@ -863,7 +863,7 @@
                     <item>select</item>
                     <item>value</item>
                     <item>runDisplay</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>

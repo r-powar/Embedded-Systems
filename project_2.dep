@@ -5,285 +5,102 @@
     <configuration>
         <name>Debug</name>
         <outputs>
-            <file>$PROJ_DIR$\..\..\..\driverlib\pwm.h</file>
-            <file>$PROJ_DIR$\..\..\..\utils\uartstdio.h</file>
-            <file>$PROJ_DIR$\measure.c</file>
-            <file>$PROJ_DIR$\TCB.h</file>
-            <file>$PROJ_DIR$\Debug\Obj\main.o</file>
-            <file>$PROJ_DIR$\..\..\..\utils\ustdlib.h</file>
-            <file>$PROJ_DIR$\Debug\Obj\rit128x96x4.pbi</file>
-            <file>$PROJ_DIR$\Debug\Obj\project_2.pbd</file>
-            <file>$PROJ_DIR$\..\drivers\rit128x96x4.h</file>
-            <file>$PROJ_DIR$\..\..\..\driverlib\gpio.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\stdarg.h</file>
-            <file>$PROJ_DIR$\Debug\Obj\ustdlib.pbi</file>
-            <file>$PROJ_DIR$\..\..\..\driverlib\ssi.h</file>
-            <file>$PROJ_DIR$\..\..\..\inc\hw_types.h</file>
-            <file>$PROJ_DIR$\..\..\..\inc\hw_uart.h</file>
-            <file>$PROJ_DIR$\..\..\..\driverlib\rom_map.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\string.h</file>
-            <file>$PROJ_DIR$\..\..\..\driverlib\timer.h</file>
-            <file>$TOOLKIT_DIR$\lib\rt7M_tl.a</file>
-            <file>$TOOLKIT_DIR$\lib\dl7M_tln.a</file>
-            <file>$PROJ_DIR$\..\..\..\driverlib\interrupt.h</file>
-            <file>$PROJ_DIR$\..\..\..\utils\uartstdio.c</file>
+            <file>$PROJ_DIR$\Debug\Obj\display.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\project_2.map</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
+            <file>$PROJ_DIR$\..\..\..\inc\hw_ssi.h</file>
             <file>$PROJ_DIR$\..\..\..\inc\hw_gpio.h</file>
             <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
-            <file>$PROJ_DIR$\BoolInclude.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
-            <file>$PROJ_DIR$\..\..\..\inc\hw_ints.h</file>
             <file>$PROJ_DIR$\..\..\..\driverlib\pin_map.h</file>
-            <file>$PROJ_DIR$\..\..\..\driverlib\rom.h</file>
-            <file>$PROJ_DIR$\..\..\..\driverlib\uart.h</file>
-            <file>$PROJ_DIR$\..\..\..\driverlib\systick.h</file>
-            <file>$PROJ_DIR$\..\..\..\inc\hw_ssi.h</file>
-            <file>$PROJ_DIR$\Debug\Obj\display.o</file>
-            <file>$PROJ_DIR$\Debug\Obj\statusMethod.pbi</file>
-            <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
-            <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+            <file>$PROJ_DIR$\..\..\..\inc\hw_sysctl.h</file>
             <file>$TOOLKIT_DIR$\inc\c\stdio.h</file>
             <file>$PROJ_DIR$\Debug\Obj\rit128x96x4.o</file>
             <file>$PROJ_DIR$\..\..\..\inc\hw_memmap.h</file>
-            <file>$TOOLKIT_DIR$\config\linker\TexasInstruments\LM3S8962.icf</file>
-            <file>$PROJ_DIR$\..\..\..\inc\hw_sysctl.h</file>
             <file>$PROJ_DIR$\Debug\Obj\warning.o</file>
+            <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
             <file>$TOOLKIT_DIR$\lib\shb_l.a</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\rom.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\display.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\statusMethod.pbi</file>
             <file>$PROJ_DIR$\..\..\..\driverlib\debug.h</file>
+            <file>$TOOLKIT_DIR$\config\linker\TexasInstruments\LM3S8962.icf</file>
             <file>$PROJ_DIR$\Debug\Obj\measure.o</file>
-            <file>$PROJ_DIR$\Debug\List\project_2.map</file>
+            <file>$PROJ_DIR$\BoolInclude.h</file>
+            <file>$PROJ_DIR$\..\..\..\inc\hw_ints.h</file>
             <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\systick.h</file>
             <file>$PROJ_DIR$\Debug\Obj\compute.o</file>
-            <file>$PROJ_DIR$\Debug\Obj\ustdlib.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
             <file>$PROJ_DIR$\Debug\Obj\startup_ewarm.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\ustdlib.o</file>
             <file>$PROJ_DIR$\Debug\Obj\startup_ewarm.pbi</file>
             <file>$PROJ_DIR$\Debug\Obj\statusMethod.o</file>
-            <file>$PROJ_DIR$\Debug\Obj\display.pbi</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
-            <file>$TOOLKIT_DIR$\lib\m7M_tl.a</file>
-            <file>$PROJ_DIR$\Debug\Exe\project_2.out</file>
-            <file>$PROJ_DIR$\Debug\Obj\compute.pbi</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\uart.h</file>
             <file>$TOOLKIT_DIR$\inc\c\ysizet.h</file>
-            <file>$PROJ_DIR$\Debug\Obj\measure.pbi</file>
             <file>$PROJ_DIR$\Debug\Obj\warning.pbi</file>
-            <file>$PROJ_DIR$\..\..\..\driverlib\sysctl.h</file>
-            <file>$PROJ_DIR$\GlobalCounter.h</file>
+            <file>$PROJ_DIR$\Debug\Exe\project_2.out</file>
             <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
-            <file>$PROJ_DIR$\..\..\..\inc\lm3s8962.h</file>
-            <file>$PROJ_DIR$\ProjectStructs.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\stdbool.h</file>
-            <file>$PROJ_DIR$\main.c</file>
-            <file>$PROJ_DIR$\..\..\..\driverlib\ewarm-cm3\Exe\driverlib-cm3.a</file>
-            <file>$PROJ_DIR$\..\..\..\utils\ustdlib.c</file>
-            <file>$PROJ_DIR$\..\drivers\rit128x96x4.c</file>
-            <file>$PROJ_DIR$\GlobalCounter.c</file>
-            <file>$PROJ_DIR$\startup_ewarm.c</file>
-            <file>$PROJ_DIR$\compute.c</file>
-            <file>$PROJ_DIR$\compute.h</file>
-            <file>$PROJ_DIR$\display.c</file>
-            <file>$PROJ_DIR$\warning.c</file>
-            <file>$PROJ_DIR$\statusMethod.h</file>
-            <file>$PROJ_DIR$\display.h</file>
-            <file>$PROJ_DIR$\measure.h</file>
-            <file>$PROJ_DIR$\statusMethod.c</file>
-            <file>$PROJ_DIR$\warning.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\compute.pbi</file>
             <file>$PROJ_DIR$\Debug\Obj\GlobalCounter.pbi</file>
             <file>$PROJ_DIR$\Debug\Obj\GlobalCounter.o</file>
+            <file>$TOOLKIT_DIR$\lib\m7M_tl.a</file>
+            <file>$PROJ_DIR$\..\..\..\inc\lm3s8962.h</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\sysctl.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\measure.pbi</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdbool.h</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\interrupt.h</file>
+            <file>$PROJ_DIR$\..\..\..\utils\uartstdio.c</file>
+            <file>$PROJ_DIR$\Debug\Obj\rit128x96x4.pbi</file>
+            <file>$PROJ_DIR$\..\drivers\rit128x96x4.h</file>
+            <file>$PROJ_DIR$\warning.c</file>
+            <file>$PROJ_DIR$\measure.c</file>
+            <file>$PROJ_DIR$\..\..\..\utils\ustdlib.c</file>
+            <file>$PROJ_DIR$\Debug\Obj\main.o</file>
+            <file>$PROJ_DIR$\TCB.h</file>
+            <file>$PROJ_DIR$\..\..\..\utils\ustdlib.h</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\gpio.h</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\ssi.h</file>
+            <file>$PROJ_DIR$\..\..\..\inc\hw_uart.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\project_2.pbd</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdarg.h</file>
+            <file>$PROJ_DIR$\statusMethod.h</file>
+            <file>$PROJ_DIR$\warning.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\ustdlib.pbi</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\rom_map.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\string.h</file>
+            <file>$PROJ_DIR$\ProjectStructs.h</file>
+            <file>$PROJ_DIR$\..\..\..\utils\uartstdio.h</file>
+            <file>$PROJ_DIR$\..\..\..\inc\hw_types.h</file>
+            <file>$PROJ_DIR$\startup_ewarm.c</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\timer.h</file>
+            <file>$PROJ_DIR$\statusMethod.c</file>
+            <file>$PROJ_DIR$\measure.h</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\pwm.h</file>
+            <file>$TOOLKIT_DIR$\lib\rt7M_tl.a</file>
+            <file>$TOOLKIT_DIR$\lib\dl7M_tln.a</file>
+            <file>$PROJ_DIR$\..\drivers\rit128x96x4.c</file>
+            <file>$PROJ_DIR$\compute.h</file>
+            <file>$PROJ_DIR$\display.h</file>
+            <file>$PROJ_DIR$\..\..\..\driverlib\ewarm-cm3\Exe\driverlib-cm3.a</file>
+            <file>$PROJ_DIR$\compute.c</file>
+            <file>$PROJ_DIR$\GlobalCounter.c</file>
+            <file>$PROJ_DIR$\display.c</file>
+            <file>$PROJ_DIR$\GlobalCounter.h</file>
+            <file>$PROJ_DIR$\main.c</file>
         </outputs>
-        <file>
-            <name>$PROJ_DIR$\measure.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 44</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 58</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 36 23 34 62 46 25 57 65 64 3 78 61</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 57 78 64 23 46 34 65 3 61 62 36 25</file>
-                </tool>
-            </inputs>
-        </file>
         <file>
             <name>$PROJ_DIR$\Debug\Exe\project_2.out</name>
             <outputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 45</file>
+                    <file> 1</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 39 47 32 67 82 4 44 37 49 51 48 41 42 18 54 19</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\main.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 4</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 35</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 36 23 34 62 46 25 57 65 64 24 3 63 61 22 26 38 13 43 9 27 20 30 60 8 21 14 28 15 29 1 0 17</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 60 22 15 3 43 17 23 10 64 61 38 20 21 57 25 14 65 24 63 26 13 9 30 8 0 34 46 29 36 62 27 28 1</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\utils\ustdlib.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 48</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 11</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 16 23 34 62 46 25 57 53 43 5</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 5 34 62 43 23 57 53 46 25 16 10</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\drivers\rit128x96x4.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 37</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 6</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 31 38 40 13 43 9 27 12 60 8</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 8 43 40 12 38 13 9 60 27 31</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>[ROOT_NODE]</name>
-            <outputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 55 45</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\GlobalCounter.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 82</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 81</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 61</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 61</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\startup_ewarm.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 49</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 50</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\compute.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 47</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 56</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 36 23 34 62 46 25 57 65 64 3 73 61</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 34 73 62 64 65 3 61 23 57 46 25 36</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\display.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 32</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 52</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 36 23 34 62 46 25 57 65 16 53 64 3 77 61 5</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 34 3 53 16 61 62 23 65 64 77 5 57 36 46 25 10</file>
+                    <file> 18 25 15 77 38 51 19 9 27 30 28 11 13 72 39 73</file>
                 </tool>
             </inputs>
         </file>
@@ -292,30 +109,7 @@
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 41</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 59</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 36 23 34 62 46 25 57 65 63 64 3 80 61 38 13 43 9 27 0 60 8</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 13 23 3 60 57 25 63 61 9 46 65 64 80 38 43 0 8 34 62 36 27</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\statusMethod.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 51</file>
+                    <file> 11</file>
                 </tool>
                 <tool>
                     <name>BICOMP</name>
@@ -325,11 +119,217 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 36 23 34 62 46 25 57 65 16 53 64 3 77 61</file>
+                    <file> 8 5 12 35 22 23 32 43 40 64 52 60 81 10 66 17 54 6 71 41 47</file>
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 46 23 3 16 61 57 25 65 64 77 34 62 36 53</file>
+                    <file> 66 5 52 41 32 23 40 81 54 22 43 64 60 10 17 71 47 12 35 8 6</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\measure.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 19</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 42</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 8 5 12 35 22 23 32 43 64 52 70 81</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 32 70 64 5 22 12 43 52 81 35 8 23</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\utils\ustdlib.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 28</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 61</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 63 5 12 35 22 23 32 2 17 53</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 53 12 35 17 5 32 2 22 23 63 58</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\startup_ewarm.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 27</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 29</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\statusMethod.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 30</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 16</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 8 5 12 35 22 23 32 43 63 2 64 52 76 81</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 22 5 52 63 81 32 23 43 64 76 12 35 8 2</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\drivers\rit128x96x4.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 9</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 46</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 3 10 7 66 17 54 6 55 41 47</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 47 17 7 55 10 66 54 41 6 3</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>[ROOT_NODE]</name>
+            <outputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 1 34</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\compute.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 25</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 36</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 8 5 12 35 22 23 32 43 64 52 75 81</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 12 75 35 64 43 52 81 5 32 22 23 8</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\GlobalCounter.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 38</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 37</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 81</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 81</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\display.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 15</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 0</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 8 5 12 35 22 23 32 43 63 2 64 52 76 81 53</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 12 52 2 63 81 35 5 43 64 76 53 32 8 22 23 58</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\main.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 51</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 26</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 8 5 12 35 22 23 32 43 64 20 52 40 81 4 21 10 66 17 54 6 44 24 41 47 45 56 14 62 31 65 71 68</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 41 4 62 52 17 68 5 58 64 81 10 44 45 32 23 56 43 20 40 21 66 54 24 47 71 12 22 31 8 35 6 14 65</file>
                 </tool>
             </inputs>
         </file>

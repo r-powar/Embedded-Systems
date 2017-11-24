@@ -229,7 +229,7 @@ int main( void )
   unsigned int sysDefault = 80;
   unsigned int diaDefault = 80;
   unsigned int prDefault = 50;
-  short int battDefault = 200;
+  unsigned short int battDefault = 200;
   unsigned short int modeDefault = 0;
   unsigned short int measureSelectDefault = 0;
   unsigned short int scrollDefault = 0;
@@ -238,25 +238,33 @@ int main( void )
   unsigned short int addComputeDefault = 1;
   unsigned short int addCommunicationsDefault = 0;
   //declare the variables that will be used for the tracking in the device
-  unsigned int temperatureRaw[8];
+  unsigned int * temperatureRaw = (unsigned int *) malloc(8*sizeof(unsigned int));
   temperatureRaw[0] = tempDefault;
-  unsigned int bloodPressRaw[16];
+  unsigned int * bloodPressRaw = (unsigned int *) malloc(16*sizeof(unsigned int));
   bloodPressRaw[0] = sysDefault;
   bloodPressRaw[8] = diaDefault;
-  unsigned int pulseRateRaw[8];
+  unsigned int * pulseRateRaw = (unsigned int *) malloc(8*sizeof(unsigned int));
   pulseRateRaw[0] = prDefault;
-  unsigned int tempCorrected[8];
-  unsigned int bloodPressCorrected[16];
-  unsigned int prCorrected[8];
-  short int * batteryState = &battDefault;
-  unsigned short int * mode = &modeDefault;
-  unsigned short int * measureSelect = &measureSelectDefault;
-  unsigned short int * scroll = &scrollDefault;
-  unsigned short int * select = &selectDefault;
-  unsigned short int * alarmAcknowledge = &alarmAcknowledgeDefault;
-  unsigned short int * addCompute = &addComputeDefault;
-  unsigned short int * addCommunications = &addCommunicationsDefault;
-  
+  unsigned int * tempCorrected = (unsigned int *) malloc(8*sizeof(unsigned int));
+  unsigned int * bloodPressCorrected = (unsigned int *) malloc(16*sizeof(unsigned int));
+  unsigned int * prCorrected = (unsigned int *) malloc(8*sizeof(unsigned int));
+  unsigned short int * batteryState;
+  batteryState = (unsigned short int * )malloc(sizeof(unsigned short int));
+  batteryState = &battDefault;
+  unsigned short int * mode = (unsigned short int * )malloc(sizeof(unsigned short int));
+  mode = &modeDefault;
+  unsigned short int * measureSelect = (unsigned short int * )malloc(sizeof(unsigned short int));
+  measureSelect = &measureSelectDefault;
+  unsigned short int * scroll = (unsigned short int * )malloc(sizeof(unsigned short int));
+  scroll = &scrollDefault;
+  unsigned short int * select = (unsigned short int * )malloc(sizeof(unsigned short int));
+  select = &selectDefault;
+  unsigned short int * alarmAcknowledge = (unsigned short int * )malloc(sizeof(unsigned short int));
+  alarmAcknowledge = &alarmAcknowledgeDefault;
+  unsigned short int * addCompute = (unsigned short int * )malloc(sizeof(unsigned short int));
+  addCompute = &addComputeDefault;
+  unsigned short int * addCommunications = (unsigned short int * )malloc(sizeof(unsigned short int));
+  addCommunications = &addCommunicationsDefault;
   //
   // Enable the PWM0 and PWM1 output signals.
   //
@@ -290,7 +298,7 @@ int main( void )
   measureDataPtr.addCompute = addCompute;
   //Make a void pointer to datastruct for measure
   MeasureData * MDActual;
-  MDActual = (struct MeasureData*) malloc(sizeof(struct MeasureData));
+  //MDActual = (struct MeasureData*) malloc(sizeof(struct MeasureData));
   MDActual = &measureDataPtr;
   void * voidMeasureDataPtr = MDActual;
   
@@ -307,7 +315,7 @@ int main( void )
   computeDataPtr.bloodPressCorrectedBuf = bloodPressCorrected;
   computeDataPtr.prCorrectedBuf = prCorrected;
   ComputeData * CDActual;
-  CDActual = (struct ComputeData *) malloc(sizeof(struct ComputeData));
+  //CDActual = (struct ComputeData *) malloc(sizeof(struct ComputeData));
   CDActual = &computeDataPtr;
   //Make a void pointer to datastruct for Compute
   void * voidComputeDataPtr = CDActual;
@@ -323,78 +331,76 @@ int main( void )
   keypadDataPtr.select = select;
   keypadDataPtr.alarmAcknowledge = alarmAcknowledge; 
   KeypadData * KDActual;
-  KDActual = (struct KeypadData *) malloc(sizeof(struct KeypadData));
+  //KDActual = (struct KeypadData *) malloc(sizeof(struct KeypadData));
   KDActual = &keypadDataPtr;
   //Make a void pointer to datastruct for Keypad
   void * voidKeypadDataPtr = KDActual;
   
   xTaskCreate( Keypad, "KEYPAD", 100, voidKeypadDataPtr, 1, NULL );
   
-  
   //create the TCB for Display
   DisplayData displayDataPtr;
-////  displayDataPtr = (struct DisplayData *) malloc(sizeof(struct DisplayData));
-//  displayDataPtr.tempCorrectedBuf = tempCorrected;
-//  displayDataPtr.bloodPressCorrectedBuf = bloodPressCorrected;
-//  displayDataPtr.prCorrectedBuf = prCorrected;
-//  displayDataPtr.batteryState = batteryState;
-//  displayDataPtr.mode = mode;
-//  displayDataPtr.scroll = scroll;
-//  displayDataPtr.select = select;
-//  displayDataPtr.measurementSelection = measureSelect;
-//  DisplayData * DDActual;
-//  DDActual = (struct DisplayData *) malloc(sizeof(struct DisplayData));
-//  DDActual = &displayDataPtr;
+  displayDataPtr.tempCorrectedBuf = tempCorrected;
+  displayDataPtr.bloodPressCorrectedBuf = bloodPressCorrected;
+  displayDataPtr.prCorrectedBuf = prCorrected;
+  displayDataPtr.batteryState = batteryState;
+  displayDataPtr.mode = mode;
+  displayDataPtr.scroll = scroll;
+  displayDataPtr.select = select;
+  displayDataPtr.measurementSelection = measureSelect;
+  DisplayData * DDActual;
+  DDActual = (struct DisplayData *) malloc(sizeof(struct DisplayData));
+  DDActual = &displayDataPtr;
 //  //Make a void pointer to datastruct for display
-//  void * voidDisplayDataPtr = DDActual;
+  void * voidDisplayDataPtr = DDActual;
   
-//  xTaskCreate(Display, "DISPLAY", 1000, voidDisplayDataPtr, 1, NULL );
+  xTaskCreate(Display, "DISPLAY", 1000, voidDisplayDataPtr, 1, NULL );
   
-//  //create the TCB for WarningAlarm
-//  WarningAlarmData warningAlarmDataPtr;
-////  warningAlarmDataPtr = (struct WarningAlarmData *) 
-////    malloc(sizeof(struct WarningAlarmData));
-//  //TODO: assign measure data locals to point to the values declared at the top
-//  warningAlarmDataPtr.temperatureRawBuf = temperatureRaw;
-//  warningAlarmDataPtr.bloodPressRawBuf = bloodPressRaw;
-//  warningAlarmDataPtr.pulseRateRawBuf = pulseRateRaw;
-//  warningAlarmDataPtr.batteryState = batteryState;
-//  WarningAlarmData * WADActual;
-//  WADActual =(struct WarningAlarmData *) 
+  //create the TCB for WarningAlarm
+  WarningAlarmData warningAlarmDataPtr;
+//  warningAlarmDataPtr = (struct WarningAlarmData *) 
 //    malloc(sizeof(struct WarningAlarmData));
-//  WADActual = &warningAlarmDataPtr;
-//  //Make a void pointer to datastruct for WarningAlarm
-//  void * voidWarningAlarmDataPtr = WADActual;
+  //TODO: assign measure data locals to point to the values declared at the top
+  warningAlarmDataPtr.temperatureRawBuf = temperatureRaw;
+  warningAlarmDataPtr.bloodPressRawBuf = bloodPressRaw;
+  warningAlarmDataPtr.pulseRateRawBuf = pulseRateRaw;
+  warningAlarmDataPtr.batteryState = batteryState;
+  WarningAlarmData * WADActual;
+  WADActual =(struct WarningAlarmData *) 
+    malloc(sizeof(struct WarningAlarmData));
+  WADActual = &warningAlarmDataPtr;
+  //Make a void pointer to datastruct for WarningAlarm
+  void * voidWarningAlarmDataPtr = WADActual;
+  
+  xTaskCreate(WarningAlarm, "WARNALARM", 500, voidWarningAlarmDataPtr, 1, NULL );
 //  
-//  xTaskCreate(WarningAlarm, "WARNALARM", 500, voidWarningAlarmDataPtr, 1, NULL );
-//  
-//  //create the TCB for Communications
-//  CommunicationsData communicationsDataPtr;
-////  communicationsDataPtr = (struct CommunicationsData *) 
-////    malloc(sizeof(struct CommunicationsData));
-//  //TODO: assign measure data locals to point to the values declared at the top
-//  communicationsDataPtr.tempCorrectedBuf = tempCorrected;
-//  communicationsDataPtr.bloodPressCorrectedBuf = bloodPressCorrected;
-//  communicationsDataPtr.prCorrectedBuf = prCorrected;
-//  CommunicationsData * CommDActual = &communicationsDataPtr;
-//  CommDActual = (struct CommunicationsData *) 
-//     malloc(sizeof(struct CommunicationsData));
-//  //Make a void pointer to datastruct for Communications
-//  void * voidCommunicationsDataPtr = CommDActual;
-//  
-//  xTaskCreate(Communications, "COMMUNICATIONS", 500, voidCommunicationsDataPtr, 1, NULL );
-//  
-//  //create the TCB for StatusMethod
-//  Status statusPtr;
-////  statusPtr = (struct Status *) malloc(sizeof(struct Status));
-//  //TODO: assign measure data locals to point to the values declared at the top
-//  statusPtr.batteryState = batteryState;
-//  //Make a void pointer to datastruct for StatusMethod
-//  Status * SActual = &statusPtr;
-//  SActual = (struct Status *) malloc(sizeof(struct Status));
-//  void * voidStatusPtr = SActual;
-//  
-//  xTaskCreate(StatusMethod, "STATUSMETHOD", 500, voidStatusPtr, 1, NULL );
+  //create the TCB for Communications
+  CommunicationsData communicationsDataPtr;
+//  communicationsDataPtr = (struct CommunicationsData *) 
+//    malloc(sizeof(struct CommunicationsData));
+  //TODO: assign measure data locals to point to the values declared at the top
+  communicationsDataPtr.tempCorrectedBuf = tempCorrected;
+  communicationsDataPtr.bloodPressCorrectedBuf = bloodPressCorrected;
+  communicationsDataPtr.prCorrectedBuf = prCorrected;
+  CommunicationsData * CommDActual = &communicationsDataPtr;
+  CommDActual = (struct CommunicationsData *) 
+     malloc(sizeof(struct CommunicationsData));
+  //Make a void pointer to datastruct for Communications
+  void * voidCommunicationsDataPtr = CommDActual;
+  
+  xTaskCreate(Communications, "COMMUNICATIONS", 500, voidCommunicationsDataPtr, 1, NULL );
+  
+  //create the TCB for StatusMethod
+  Status statusPtr;
+//  statusPtr = (struct Status *) malloc(sizeof(struct Status));
+  //TODO: assign measure data locals to point to the values declared at the top
+  statusPtr.batteryState = batteryState;
+  //Make a void pointer to datastruct for StatusMethod
+  Status * SActual = &statusPtr;
+  SActual = (struct Status *) malloc(sizeof(struct Status));
+  void * voidStatusPtr = SActual;
+  
+  xTaskCreate(StatusMethod, "STATUSMETHOD", 500, voidStatusPtr, 1, NULL );
 //  
 //  //create the TCB for Scheduler
 //  SchedulerData schedulerDataPtr;

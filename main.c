@@ -173,10 +173,6 @@ void vApplicationTickHook( void );
 
 /* The queue used to send messages to the OLED task. */
 QueueHandle_t xOLEDQueue;
-
-/* The welcome text. */
-const char * const pcWelcomeMessage = "   www.FreeRTOS.org";
-
 /*-----------------------------------------------------------*/
 
 
@@ -202,15 +198,17 @@ int main( void )
   
  //enable the pins for the direction buttons/select
  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
- SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
- 
  GPIOPinTypeGPIOInput(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3);
  GPIOPadConfigSet(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2| GPIO_PIN_3, GPIO_STRENGTH_2MA,
   GPIO_PIN_TYPE_STD_WPU);
+ IntEnable(INT_GPIOE);
+ 
+ SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
  GPIOPinTypeGPIOInput(GPIO_PORTF_BASE, GPIO_PIN_1);
  GPIOPadConfigSet(GPIO_PORTF_BASE, GPIO_PIN_1, GPIO_STRENGTH_2MA,
                   GPIO_PIN_TYPE_STD_WPU);
-   
+ IntEnable(INT_GPIOF);
+ 
  RIT128x96x4Init(1000000);
  //speaker
  SysCtlPeripheralEnable(SYSCTL_PERIPH_PWM);   
@@ -269,11 +267,6 @@ int main( void )
   // Enable the PWM0 and PWM1 output signals.
   //
   PWMOutputState(PWM_BASE, PWM_OUT_0_BIT | PWM_OUT_1_BIT, true);
-    
-
-    /* Create the queue used by the OLED task.  Messages for display on the OLED
-    are received via this queue. */
-//  QueueHandle_t xOLEDQueue = xQueueCreate( mainOLED_QUEUE_SIZE, sizeof( xOLEDMessage ) );
 
     /* Exclude some tasks if using the kickstart version to ensure we stay within
     the 32K code size limit. */

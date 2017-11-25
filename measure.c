@@ -4,6 +4,11 @@
 #include "TCB.h"
 #include "measure.h"
 #include "GlobalCounter.h"
+/* Scheduler includes. */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "semphr.h"
 
  //global declaration
  static int sysComplete = 0;
@@ -12,8 +17,12 @@
  //constant variable
  
 void Measure(void * voidMeasureDataPtr) {
+  TickType_t  xLastWakeTime;
+  const TickType_t xFrequency = 4000;
+  xLastWakeTime = xTaskGetTickCount();
+  MeasureData * measureDataPtr = voidMeasureDataPtr;
   while(1) { 
-    MeasureData * measureDataPtr = voidMeasureDataPtr;
+    vTaskDelayUntil(&xLastWakeTime, xFrequency);
     unsigned int * tempRaw = measureDataPtr->temperatureRawBuf;
     unsigned int * sysPRaw = measureDataPtr->bloodPressRawBuf;
     unsigned int * diasPRaw = measureDataPtr->bloodPressRawBuf+8;

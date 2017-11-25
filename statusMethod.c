@@ -5,20 +5,25 @@
 #include "TCB.h"
 #include "display.h"
 #include "GlobalCounter.h"
+/* Scheduler includes. */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "semphr.h"
 
 void StatusMethod(void * voidStatusPtr) {
-  
+  TickType_t  xLastWakeTime;
+  const TickType_t xFrequency = 4000;
+  xLastWakeTime = xTaskGetTickCount();
   while (1) {
-    //check global counter to see if it should run
-    if(globalCounter%5 == 0){
-      Status * statusPtr = voidStatusPtr;
-      //lower the battery power
-      *(statusPtr->batteryState) -= 1;
-      //if the battery runs out, set it to full.
-      if (*(statusPtr->batteryState) == 0) {
-        *(statusPtr->batteryState) = 200;      
-      }
+  vTaskDelayUntil(&xLastWakeTime, xFrequency);
+    Status * statusPtr = voidStatusPtr;
+    //lower the battery power
+    *(statusPtr->batteryState) -= 1;
+    //if the battery runs out, set it to full.
+    if (*(statusPtr->batteryState) == 0) {
+      *(statusPtr->batteryState) = 200;      
     }
-    vTaskDelay(1000);
+   vTaskDelay(1000);
   }
 }

@@ -201,12 +201,17 @@ int main( void )
  GPIOPinTypeGPIOInput(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3);
  GPIOPadConfigSet(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2| GPIO_PIN_3, GPIO_STRENGTH_2MA,
   GPIO_PIN_TYPE_STD_WPU);
+ GPIOIntTypeSet(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2, GPIO_FALLING_EDGE);
+ //GPIOPinIntEnable(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2);
  IntEnable(INT_GPIOE);
  
  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
  GPIOPinTypeGPIOInput(GPIO_PORTF_BASE, GPIO_PIN_1);
  GPIOPadConfigSet(GPIO_PORTF_BASE, GPIO_PIN_1, GPIO_STRENGTH_2MA,
                   GPIO_PIN_TYPE_STD_WPU);
+ GPIOIntTypeSet(GPIO_PORTF_BASE, GPIO_PIN_1, GPIO_FALLING_EDGE);
+// GPIOPinIntEnable(GPIO_PORTF_BASE, GPIO_PIN_1);
+ 
  IntEnable(INT_GPIOF);
  
  RIT128x96x4Init(1000000);
@@ -236,16 +241,16 @@ int main( void )
   unsigned short int addComputeDefault = 1;
   unsigned short int addCommunicationsDefault = 0;
   //declare the variables that will be used for the tracking in the device
-  unsigned int * temperatureRaw = (unsigned int *) malloc(8*sizeof(unsigned int));
-  temperatureRaw[0] = tempDefault;
-  unsigned int * bloodPressRaw = (unsigned int *) malloc(16*sizeof(unsigned int));
+  unsigned int * temperatureRaw = (unsigned int *) pvPortMalloc(8*sizeof(unsigned int));
+  *temperatureRaw = tempDefault;
+  unsigned int * bloodPressRaw = (unsigned int *) pvPortMalloc(16*sizeof(unsigned int));
   bloodPressRaw[0] = sysDefault;
   bloodPressRaw[8] = diaDefault;
-  unsigned int * pulseRateRaw = (unsigned int *) malloc(8*sizeof(unsigned int));
+  unsigned int * pulseRateRaw = (unsigned int *) pvPortMalloc(8*sizeof(unsigned int));
   pulseRateRaw[0] = prDefault;
-  unsigned int * tempCorrected = (unsigned int *) malloc(8*sizeof(unsigned int));
-  unsigned int * bloodPressCorrected = (unsigned int *) malloc(16*sizeof(unsigned int));
-  unsigned int * prCorrected = (unsigned int *) malloc(8*sizeof(unsigned int));
+  unsigned int * tempCorrected = (unsigned int *) pvPortMalloc(8*sizeof(unsigned int));
+  unsigned int * bloodPressCorrected = (unsigned int *) pvPortMalloc(16*sizeof(unsigned int));
+  unsigned int * prCorrected = (unsigned int *) pvPortMalloc(8*sizeof(unsigned int));
   unsigned short int * batteryState;
   batteryState = (unsigned short int * )malloc(sizeof(unsigned short int));
   batteryState = &battDefault;
@@ -614,80 +619,80 @@ void vApplicationTickHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vOLEDTask( void *pvParameters )
-{
-xOLEDMessage xMessage;
-unsigned long ulY, ulMaxY;
-static char cMessage[ mainMAX_MSG_LEN ];
-extern volatile unsigned long ulMaxJitter;
-const unsigned char *pucImage;
-
-/* Functions to access the OLED.  The one used depends on the dev kit
-being used. */
-void ( *vOLEDInit )( unsigned long ) = NULL;
-void ( *vOLEDStringDraw )( const char *, unsigned long, unsigned long, unsigned char ) = NULL;
-void ( *vOLEDImageDraw )( const unsigned char *, unsigned long, unsigned long, unsigned long, unsigned long ) = NULL;
-void ( *vOLEDClear )( void ) = NULL;
-
-	/* Map the OLED access functions to the driver functions that are appropriate
-	for the evaluation kit being used. */
-	switch( HWREG( SYSCTL_DID1 ) & SYSCTL_DID1_PRTNO_MASK )
-	{
-		case SYSCTL_DID1_PRTNO_6965	:
-		case SYSCTL_DID1_PRTNO_2965	:	vOLEDInit = OSRAM128x64x4Init;
-										vOLEDStringDraw = OSRAM128x64x4StringDraw;
-										vOLEDImageDraw = OSRAM128x64x4ImageDraw;
-										vOLEDClear = OSRAM128x64x4Clear;
-										ulMaxY = mainMAX_ROWS_64;
-										pucImage = pucBasicBitmap;
-										break;
-
-		case SYSCTL_DID1_PRTNO_1968	:
-		case SYSCTL_DID1_PRTNO_8962 :	vOLEDInit = RIT128x96x4Init;
-										vOLEDStringDraw = RIT128x96x4StringDraw;
-										vOLEDImageDraw = RIT128x96x4ImageDraw;
-										vOLEDClear = RIT128x96x4Clear;
-										ulMaxY = mainMAX_ROWS_96;
-										pucImage = pucBasicBitmap;
-										break;
-
-		default						:	vOLEDInit = vFormike128x128x16Init;
-										vOLEDStringDraw = vFormike128x128x16StringDraw;
-										vOLEDImageDraw = vFormike128x128x16ImageDraw;
-										vOLEDClear = vFormike128x128x16Clear;
-										ulMaxY = mainMAX_ROWS_128;
-										pucImage = pucGrLibBitmap;
-										break;
-
-	}
-
-	ulY = ulMaxY;
-
-	/* Initialise the OLED and display a startup message. */
-	vOLEDInit( ulSSI_FREQUENCY );
-	vOLEDStringDraw( "POWERED BY FreeRTOS", 0, 0, mainFULL_SCALE );
-	vOLEDImageDraw( pucImage, 0, mainCHARACTER_HEIGHT + 1, bmpBITMAP_WIDTH, bmpBITMAP_HEIGHT );
-
-	for( ;; )
-	{
-		/* Wait for a message to arrive that requires displaying. */
-		xQueueReceive( xOLEDQueue, &xMessage, portMAX_DELAY );
-
-		/* Write the message on the next available row. */
-		ulY += mainCHARACTER_HEIGHT;
-		if( ulY >= ulMaxY )
-		{
-			ulY = mainCHARACTER_HEIGHT;
-			vOLEDClear();
-			vOLEDStringDraw( pcWelcomeMessage, 0, 0, mainFULL_SCALE );
-		}
-
-		/* Display the message along with the maximum jitter time from the
-		high priority time test. */
-		sprintf( cMessage, "%s [%uns]", xMessage.pcMessage, ulMaxJitter * mainNS_PER_CLOCK );
-		vOLEDStringDraw( cMessage, 0, ulY, mainFULL_SCALE );
-	}
-}
+//void vOLEDTask( void *pvParameters )
+//{
+//xOLEDMessage xMessage;
+//unsigned long ulY, ulMaxY;
+//static char cMessage[ mainMAX_MSG_LEN ];
+//extern volatile unsigned long ulMaxJitter;
+//const unsigned char *pucImage;
+//
+///* Functions to access the OLED.  The one used depends on the dev kit
+//being used. */
+//void ( *vOLEDInit )( unsigned long ) = NULL;
+//void ( *vOLEDStringDraw )( const char *, unsigned long, unsigned long, unsigned char ) = NULL;
+//void ( *vOLEDImageDraw )( const unsigned char *, unsigned long, unsigned long, unsigned long, unsigned long ) = NULL;
+//void ( *vOLEDClear )( void ) = NULL;
+//
+//	/* Map the OLED access functions to the driver functions that are appropriate
+//	for the evaluation kit being used. */
+//	switch( HWREG( SYSCTL_DID1 ) & SYSCTL_DID1_PRTNO_MASK )
+//	{
+//		case SYSCTL_DID1_PRTNO_6965	:
+//		case SYSCTL_DID1_PRTNO_2965	:	vOLEDInit = OSRAM128x64x4Init;
+//										vOLEDStringDraw = OSRAM128x64x4StringDraw;
+//										vOLEDImageDraw = OSRAM128x64x4ImageDraw;
+//										vOLEDClear = OSRAM128x64x4Clear;
+//										ulMaxY = mainMAX_ROWS_64;
+//										pucImage = pucBasicBitmap;
+//										break;
+//
+//		case SYSCTL_DID1_PRTNO_1968	:
+//		case SYSCTL_DID1_PRTNO_8962 :	vOLEDInit = RIT128x96x4Init;
+//										vOLEDStringDraw = RIT128x96x4StringDraw;
+//										vOLEDImageDraw = RIT128x96x4ImageDraw;
+//										vOLEDClear = RIT128x96x4Clear;
+//										ulMaxY = mainMAX_ROWS_96;
+//										pucImage = pucBasicBitmap;
+//										break;
+//
+//		default						:	vOLEDInit = vFormike128x128x16Init;
+//										vOLEDStringDraw = vFormike128x128x16StringDraw;
+//										vOLEDImageDraw = vFormike128x128x16ImageDraw;
+//										vOLEDClear = vFormike128x128x16Clear;
+//										ulMaxY = mainMAX_ROWS_128;
+//										pucImage = pucGrLibBitmap;
+//										break;
+//
+//	}
+//
+//	ulY = ulMaxY;
+//
+//	/* Initialise the OLED and display a startup message. */
+//	vOLEDInit( ulSSI_FREQUENCY );
+//	vOLEDStringDraw( "POWERED BY FreeRTOS", 0, 0, mainFULL_SCALE );
+//	vOLEDImageDraw( pucImage, 0, mainCHARACTER_HEIGHT + 1, bmpBITMAP_WIDTH, bmpBITMAP_HEIGHT );
+//
+//	for( ;; )
+//	{
+//		/* Wait for a message to arrive that requires displaying. */
+//		xQueueReceive( xOLEDQueue, &xMessage, portMAX_DELAY );
+//
+//		/* Write the message on the next available row. */
+//		ulY += mainCHARACTER_HEIGHT;
+//		if( ulY >= ulMaxY )
+//		{
+//			ulY = mainCHARACTER_HEIGHT;
+//			vOLEDClear();
+//			vOLEDStringDraw( pcWelcomeMessage, 0, 0, mainFULL_SCALE );
+//		}
+//
+//		/* Display the message along with the maximum jitter time from the
+//		high priority time test. */
+//		sprintf( cMessage, "%s [%uns]", xMessage.pcMessage, ulMaxJitter * mainNS_PER_CLOCK );
+//		vOLEDStringDraw( cMessage, 0, ulY, mainFULL_SCALE );
+//	}
+//}
 /*-----------------------------------------------------------*/
 
 void vApplicationStackOverflowHook( TaskHandle_t *pxTask, signed char *pcTaskName )

@@ -1,0 +1,1 @@
+void EKGCapture(void * voidEKGCaptureDataPtr);

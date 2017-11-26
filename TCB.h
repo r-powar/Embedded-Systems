@@ -10,6 +10,10 @@ typedef struct MyStruct TCB;
 
 //declare the method that will simulate measurements
 void Measure(void * measureDataPtr);
+//declare the method that will capture EKG signals
+void EKGCapture(void * voidEKGCaptureDataPtr);
+// declare the method that will perform the FFT
+void EKGProcessing(void * voidEKGCaptureDataPtr);
 //declare the method that will compute corrected values
 void Compute(void * voidComputeDataPtr);
 //declare the method that will manage the display

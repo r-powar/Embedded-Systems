@@ -184,234 +184,199 @@ QueueHandle_t xOLEDQueue;
 *************************************************************************/
 int main(void)
 {
-	prvSetupHardware();
+  prvSetupHardware();
 
-	//LED
-	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
-	GPIOPinTypeGPIOInput(GPIO_PORTF_BASE, GPIO_PIN_0);
+  //LED
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
+  GPIOPinTypeGPIOInput(GPIO_PORTF_BASE, GPIO_PIN_0);
 
 
-	//enable the pins for the direction buttons/select
-	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
-	GPIOPinTypeGPIOInput(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3);
-	GPIOPadConfigSet(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, GPIO_STRENGTH_2MA,
-		GPIO_PIN_TYPE_STD_WPU);
-        GPIOIntTypeSet(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2, GPIO_FALLING_EDGE);
-	IntEnable(INT_GPIOE);
+  //enable the pins for the direction buttons/select
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
+  GPIOPinTypeGPIOInput(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3);
+  GPIOPadConfigSet(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, GPIO_STRENGTH_2MA,
+          GPIO_PIN_TYPE_STD_WPU);
+  GPIOIntTypeSet(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2, GPIO_FALLING_EDGE);
+  GPIOPinIntEnable(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2);
+  IntEnable(INT_GPIOE);
 
-	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
-	GPIOPinTypeGPIOInput(GPIO_PORTF_BASE, GPIO_PIN_1);
-	GPIOPadConfigSet(GPIO_PORTF_BASE, GPIO_PIN_1, GPIO_STRENGTH_2MA,
-		GPIO_PIN_TYPE_STD_WPU);
-        GPIOIntTypeSet(GPIO_PORTF_BASE, GPIO_PIN_1, GPIO_FALLING_EDGE);
-	IntEnable(INT_GPIOF);
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
+  GPIOPinTypeGPIOInput(GPIO_PORTF_BASE, GPIO_PIN_1);
+  GPIOPadConfigSet(GPIO_PORTF_BASE, GPIO_PIN_1, GPIO_STRENGTH_2MA,
+          GPIO_PIN_TYPE_STD_WPU);
+  GPIOIntTypeSet(GPIO_PORTF_BASE, GPIO_PIN_1, GPIO_FALLING_EDGE);
+  GPIOPinIntEnable(GPIO_PORTF_BASE, GPIO_PIN_1);
+  IntEnable(INT_GPIOF);
 
-	RIT128x96x4Init(1000000);
-	//speaker
-	SysCtlPeripheralEnable(SYSCTL_PERIPH_PWM);
-	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOG);
-	GPIOPinTypePWM(GPIO_PORTG_BASE, GPIO_PIN_1);
-	volatile unsigned long ulPeriod = SysCtlClockGet() / 2048;
-	PWMGenConfigure(PWM_BASE, PWM_GEN_0,
-		PWM_GEN_MODE_UP_DOWN | PWM_GEN_MODE_NO_SYNC);
-	PWMGenPeriodSet(PWM_BASE, PWM_GEN_0, ulPeriod);
-	PWMPulseWidthSet(PWM_BASE, PWM_OUT_1, ulPeriod * 3 / 4);
+  RIT128x96x4Init(1000000);
+  //speaker
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_PWM);
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOG);
+  GPIOPinTypePWM(GPIO_PORTG_BASE, GPIO_PIN_1);
+  volatile unsigned long ulPeriod = SysCtlClockGet() / 2048;
+  PWMGenConfigure(PWM_BASE, PWM_GEN_0,
+          PWM_GEN_MODE_UP_DOWN | PWM_GEN_MODE_NO_SYNC);
+  PWMGenPeriodSet(PWM_BASE, PWM_GEN_0, ulPeriod);
+  PWMPulseWidthSet(PWM_BASE, PWM_OUT_1, ulPeriod * 3 / 4);
 
-	PWMGenDisable(PWM_BASE, PWM_GEN_0); // Turn off the speaker
+  PWMGenDisable(PWM_BASE, PWM_GEN_0); // Turn off the speaker
+  
+  //initialize defaults
+  unsigned int tempDefault = 75;
+  unsigned int sysDefault = 80;
+  unsigned int diaDefault = 80;
+  unsigned int prDefault = 50;
+  unsigned short int battDefault = 200;
+  unsigned short int modeDefault = 0;
+  unsigned short int measureSelectDefault = 0;
+  unsigned short int scrollDefault = 0;
+  unsigned short int selectDefault = 0;
+  unsigned short int alarmAcknowledgeDefault = 0;
+  unsigned short int addComputeDefault = 1;
+  unsigned short int addCommunicationsDefault = 0;
+  unsigned int * temperatureRaw = (unsigned int *)pvPortMalloc(8 * sizeof(unsigned int));
+  temperatureRaw[0] = tempDefault;
+  unsigned int * bloodPressRaw = (unsigned int *)pvPortMalloc(16 * sizeof(unsigned int));
+  bloodPressRaw[0] = sysDefault;
+  bloodPressRaw[8] = diaDefault;
+  unsigned int pulseRateRaw[8] = { 50 };
+  unsigned int * tempCorrected = (unsigned int *)pvPortMalloc(8 * sizeof(unsigned int));
+  unsigned int * bloodPressCorrected = (unsigned int *)pvPortMalloc(16 * sizeof(unsigned int));
+  unsigned int * prCorrected = (unsigned int *)pvPortMalloc(8 * sizeof(unsigned int));
+  tempCorrected[0] = 0;
+  bloodPressCorrected[0] = 0;
+  bloodPressCorrected[8] = 0;
+  prCorrected[0] = 0;
+  unsigned short int * batteryState;
+  batteryState = &battDefault;
+  unsigned short int * mode;
+  mode = &modeDefault;
+  unsigned short int * measureSelect;
+  measureSelect = &measureSelectDefault;
+  unsigned short int * scroll;
+  scroll = &scrollDefault;
+  unsigned short int * select;
+  select = &selectDefault;
+  unsigned short int * alarmAcknowledge;
+  alarmAcknowledge = &alarmAcknowledgeDefault;
+  unsigned short int * addCompute;
+  addCompute = &addComputeDefault;
+  unsigned short int * addCommunications;
+  addCommunications = &addCommunicationsDefault;
+  //
+  // Enable the PWM0 and PWM1 output signals.
+  //
+  PWMOutputState(PWM_BASE, PWM_OUT_0_BIT | PWM_OUT_1_BIT, true);
 
-										//initialize defaults
-	unsigned int tempDefault = 75;
-	unsigned int sysDefault = 80;
-	unsigned int diaDefault = 80;
-	unsigned int prDefault = 50;
-	unsigned short int battDefault = 200;
-	unsigned short int modeDefault = 0;
-	unsigned short int measureSelectDefault = 0;
-	unsigned short int scrollDefault = 0;
-	unsigned short int selectDefault = 0;
-	unsigned short int alarmAcknowledgeDefault = 0;
-	unsigned short int addComputeDefault = 1;
-	unsigned short int addCommunicationsDefault = 0;
-	//declare the variables that will be used for the tracking in the device
-	unsigned int * temperatureRaw = (unsigned int *)pvPortMalloc(8 * sizeof(unsigned int));
-	temperatureRaw[0] = tempDefault;
-	//uint8_t *temperatureRaw[8] = {75, 75, 75, 75, 75, 75, 75, 75};
-	unsigned int * bloodPressRaw = (unsigned int *)pvPortMalloc(16 * sizeof(unsigned int));
-	bloodPressRaw[0] = sysDefault;
-	bloodPressRaw[8] = diaDefault;
-	//unsigned int * pulseRateRaw = (unsigned int *) pvPortMalloc(8*sizeof(unsigned int));
-	unsigned int pulseRateRaw[8] = { 50 };
-	unsigned int * tempCorrected = (unsigned int *)pvPortMalloc(8 * sizeof(unsigned int));
-	unsigned int * bloodPressCorrected = (unsigned int *)pvPortMalloc(16 * sizeof(unsigned int));
-	unsigned int * prCorrected = (unsigned int *)pvPortMalloc(8 * sizeof(unsigned int));
-	tempCorrected[0] = 0;
-	bloodPressCorrected[0] = 0;
-	bloodPressCorrected[8] = 0;
-	prCorrected[0] = 0;
-	unsigned short int * batteryState;
-	//batteryState = (unsigned short int * ) pvPortMalloc(sizeof(unsigned short int));
-	batteryState = &battDefault;
-	unsigned short int * mode;
-	mode = &modeDefault;
-	unsigned short int * measureSelect;
-	measureSelect = &measureSelectDefault;
-	unsigned short int * scroll;
-	scroll = &scrollDefault;
-	unsigned short int * select;
-	select = &selectDefault;
-	unsigned short int * alarmAcknowledge;
-	alarmAcknowledge = &alarmAcknowledgeDefault;
-	unsigned short int * addCompute;
-	addCompute = &addComputeDefault;
-	unsigned short int * addCommunications;
-	addCommunications = &addCommunicationsDefault;
-	//
-	// Enable the PWM0 and PWM1 output signals.
-	//
-	PWMOutputState(PWM_BASE, PWM_OUT_0_BIT | PWM_OUT_1_BIT, true);
-
-	/* Exclude some tasks if using the kickstart version to ensure we stay within
-	the 32K code size limit. */
+  /* Exclude some tasks if using the kickstart version to ensure we stay within
+  the 32K code size limit. */
 #if mainINCLUDE_WEB_SERVER != 0
-	{
-		/* Create the uIP task if running on a processor that includes a MAC and
-		PHY. */
-		if (SysCtlPeripheralPresent(SYSCTL_PERIPH_ETH))
-		{
-			xTaskCreate(vuIP_Task, "uIP", mainBASIC_WEB_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY - 1, NULL);
-		}
-	}
+  {
+          /* Create the uIP task if running on a processor that includes a MAC and
+          PHY. */
+          if (SysCtlPeripheralPresent(SYSCTL_PERIPH_ETH))
+          {
+                  xTaskCreate(vuIP_Task, "uIP", mainBASIC_WEB_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY - 1, NULL);
+          }
+  }
 #endif
 
-	//create the TCB for Measure
-	MeasureData measureDataPtr;
-	//  measureDataPtr = (struct MeasureData) malloc(sizeof(struct MeasureData));
-	measureDataPtr.temperatureRawBuf = temperatureRaw;
-	measureDataPtr.bloodPressRawBuf = bloodPressRaw;
-	measureDataPtr.pulseRateRawBuf = pulseRateRaw;
-	measureDataPtr.measurementSelection = measureSelect;
-	measureDataPtr.addCompute = addCompute;
-	//Make a void pointer to datastruct for measure
-	MeasureData * MDActual;
-	MDActual = (struct MeasureData*) pvPortMalloc(sizeof(struct MeasureData));
-	MDActual = &measureDataPtr;
-	void * voidMeasureDataPtr = MDActual;
+  //create the TCB for Measure
+  MeasureData measureDataPtr;
+  measureDataPtr.temperatureRawBuf = temperatureRaw;
+  measureDataPtr.bloodPressRawBuf = bloodPressRaw;
+  measureDataPtr.pulseRateRawBuf = pulseRateRaw;
+  measureDataPtr.measurementSelection = measureSelect;
+  measureDataPtr.addCompute = addCompute;
+  MeasureData * MDActual;
+  MDActual = (struct MeasureData*) pvPortMalloc(sizeof(struct MeasureData));
+  MDActual = &measureDataPtr;
+  void * voidMeasureDataPtr = MDActual;
 
-	xTaskCreate(Measure, "MEASURE", 1000, voidMeasureDataPtr, 1, NULL);
+  xTaskCreate(Measure, "MEASURE", 1000, voidMeasureDataPtr, 1, NULL);
 
-	//create the TCB for Compute
-	ComputeData computeDataPtr;
-	//  computeDataPtr = (struct ComputeData *) malloc(sizeof(struct ComputeData));
-	//assign compute data locals to point to the values declared at the top
-	computeDataPtr.temperatureRawBuf = temperatureRaw;
-	computeDataPtr.bloodPressRawBuf = bloodPressRaw;
-	computeDataPtr.pulseRateRawBuf = pulseRateRaw;
-	computeDataPtr.tempCorrectedBuf = tempCorrected;
-	computeDataPtr.bloodPressCorrectedBuf = bloodPressCorrected;
-	computeDataPtr.prCorrectedBuf = prCorrected;
-	ComputeData * CDActual;
-	//CDActual = (struct ComputeData *) malloc(sizeof(struct ComputeData));
-	CDActual = &computeDataPtr;
-	//Make a void pointer to datastruct for Compute
-	void * voidComputeDataPtr = CDActual;
+  //create the TCB for Compute
+  ComputeData computeDataPtr;
+  computeDataPtr.temperatureRawBuf = temperatureRaw;
+  computeDataPtr.bloodPressRawBuf = bloodPressRaw;
+  computeDataPtr.pulseRateRawBuf = pulseRateRaw;
+  computeDataPtr.tempCorrectedBuf = tempCorrected;
+  computeDataPtr.bloodPressCorrectedBuf = bloodPressCorrected;
+  computeDataPtr.prCorrectedBuf = prCorrected;
+  ComputeData * CDActual;
+  CDActual = &computeDataPtr;
+  void * voidComputeDataPtr = CDActual;
 
-	xTaskCreate(Compute, "COMPUTE", 500, voidComputeDataPtr, 1, NULL);
+  xTaskCreate(Compute, "COMPUTE", 500, voidComputeDataPtr, 1, NULL);
 
-	//create the TCB for Keypad
-	KeypadData keypadDataPtr;
-	//  keypadDataPtr = (struct KeypadData *) malloc(sizeof(struct KeypadData));
-	keypadDataPtr.mode = mode;
-	keypadDataPtr.measurementSelection = measureSelect;
-	keypadDataPtr.scroll = scroll;
-	keypadDataPtr.select = select;
-	keypadDataPtr.alarmAcknowledge = alarmAcknowledge;
-	KeypadData * KDActual;
-	//KDActual = (struct KeypadData *) malloc(sizeof(struct KeypadData));
-	KDActual = &keypadDataPtr;
-	//Make a void pointer to datastruct for Keypad
-	void * voidKeypadDataPtr = KDActual;
+  //create the TCB for Keypad
+  KeypadData keypadDataPtr;
+  keypadDataPtr.mode = mode;
+  keypadDataPtr.measurementSelection = measureSelect;
+  keypadDataPtr.scroll = scroll;
+  keypadDataPtr.select = select;
+  keypadDataPtr.alarmAcknowledge = alarmAcknowledge;
+  KeypadData * KDActual;
+  KDActual = &keypadDataPtr;
+  void * voidKeypadDataPtr = KDActual;
 
-	xTaskCreate(Keypad, "KEYPAD", 100, voidKeypadDataPtr, 1, NULL);
+  xTaskCreate(Keypad, "KEYPAD", 100, voidKeypadDataPtr, 1, NULL);
 
-	//create the TCB for Display
-	DisplayData displayDataPtr;
-	displayDataPtr.tempCorrectedBuf = tempCorrected;
-	displayDataPtr.bloodPressCorrectedBuf = bloodPressCorrected;
-	displayDataPtr.prCorrectedBuf = prCorrected;
-	displayDataPtr.batteryState = batteryState;
-	displayDataPtr.mode = mode;
-	displayDataPtr.scroll = scroll;
-	displayDataPtr.select = select;
-	displayDataPtr.measurementSelection = measureSelect;
-	DisplayData * DDActual;
-	DDActual = (struct DisplayData *) pvPortMalloc(sizeof(struct DisplayData));
-	DDActual = &displayDataPtr;
-	//  //Make a void pointer to datastruct for display
-	void * voidDisplayDataPtr = DDActual;
+  //create the TCB for Display
+  DisplayData displayDataPtr;
+  displayDataPtr.tempCorrectedBuf = tempCorrected;
+  displayDataPtr.bloodPressCorrectedBuf = bloodPressCorrected;
+  displayDataPtr.prCorrectedBuf = prCorrected;
+  displayDataPtr.batteryState = batteryState;
+  displayDataPtr.mode = mode;
+  displayDataPtr.scroll = scroll;
+  displayDataPtr.select = select;
+  displayDataPtr.measurementSelection = measureSelect;
+  DisplayData * DDActual;
+  DDActual = (struct DisplayData *) pvPortMalloc(sizeof(struct DisplayData));
+  DDActual = &displayDataPtr;
+  void * voidDisplayDataPtr = DDActual;
 
-	xTaskCreate(Display, "DISPLAY", 1000, voidDisplayDataPtr, 1, NULL);
+  xTaskCreate(Display, "DISPLAY", 1000, voidDisplayDataPtr, 1, NULL);
 
-	//create the TCB for WarningAlarm
-	WarningAlarmData warningAlarmDataPtr;
-	//  warningAlarmDataPtr = (struct WarningAlarmData *) 
-	//    malloc(sizeof(struct WarningAlarmData));
-	//TODO: assign measure data locals to point to the values declared at the top
-	warningAlarmDataPtr.temperatureRawBuf = temperatureRaw;
-	warningAlarmDataPtr.bloodPressRawBuf = bloodPressRaw;
-	warningAlarmDataPtr.pulseRateRawBuf = pulseRateRaw;
-	warningAlarmDataPtr.batteryState = batteryState;
-	WarningAlarmData * WADActual;
-	WADActual = (struct WarningAlarmData *)
-		pvPortMalloc(sizeof(struct WarningAlarmData));
-	WADActual = &warningAlarmDataPtr;
-	//Make a void pointer to datastruct for WarningAlarm
-	void * voidWarningAlarmDataPtr = WADActual;
+  //create the TCB for WarningAlarm
+  WarningAlarmData warningAlarmDataPtr;
+  warningAlarmDataPtr.temperatureRawBuf = temperatureRaw;
+  warningAlarmDataPtr.bloodPressRawBuf = bloodPressRaw;
+  warningAlarmDataPtr.pulseRateRawBuf = pulseRateRaw;
+  warningAlarmDataPtr.batteryState = batteryState;
+  WarningAlarmData * WADActual;
+  WADActual = (struct WarningAlarmData *)
+          pvPortMalloc(sizeof(struct WarningAlarmData));
+  WADActual = &warningAlarmDataPtr;
+  void * voidWarningAlarmDataPtr = WADActual;
 
-	xTaskCreate(WarningAlarm, "WARNALARM", 500, voidWarningAlarmDataPtr, 1, NULL);
-	//  
-	//create the TCB for Communications
-	CommunicationsData communicationsDataPtr;
-	//  communicationsDataPtr = (struct CommunicationsData *) 
-	//    malloc(sizeof(struct CommunicationsData));
-	//TODO: assign measure data locals to point to the values declared at the top
-	communicationsDataPtr.tempCorrectedBuf = tempCorrected;
-	communicationsDataPtr.bloodPressCorrectedBuf = bloodPressCorrected;
-	communicationsDataPtr.prCorrectedBuf = prCorrected;
-	CommunicationsData * CommDActual = &communicationsDataPtr;
-	CommDActual = (struct CommunicationsData *)
-		pvPortMalloc(sizeof(struct CommunicationsData));
-	//Make a void pointer to datastruct for Communications
-	void * voidCommunicationsDataPtr = CommDActual;
+  xTaskCreate(WarningAlarm, "WARNALARM", 500, voidWarningAlarmDataPtr, 1, NULL);
+  CommunicationsData communicationsDataPtr;
+  communicationsDataPtr.tempCorrectedBuf = tempCorrected;
+  communicationsDataPtr.bloodPressCorrectedBuf = bloodPressCorrected;
+  communicationsDataPtr.prCorrectedBuf = prCorrected;
+  CommunicationsData * CommDActual = &communicationsDataPtr;
+  CommDActual = (struct CommunicationsData *)
+          pvPortMalloc(sizeof(struct CommunicationsData));
+  void * voidCommunicationsDataPtr = CommDActual;
 
-	xTaskCreate(Communications, "COMMUNICATIONS", 500, voidCommunicationsDataPtr, 1, NULL);
+  xTaskCreate(Communications, "COMMUNICATIONS", 500, voidCommunicationsDataPtr, 1, NULL);
 
-	//create the TCB for StatusMethod
-	Status statusPtr;
-	//  statusPtr = (struct Status *) malloc(sizeof(struct Status));
-	//TODO: assign measure data locals to point to the values declared at the top
-	statusPtr.batteryState = batteryState;
-	//Make a void pointer to datastruct for StatusMethod
-	Status * SActual = &statusPtr;
-	SActual = (struct Status *) pvPortMalloc(sizeof(struct Status));
-	void * voidStatusPtr = SActual;
+  //create the TCB for StatusMethod
+  Status statusPtr;
+  statusPtr.batteryState = batteryState;
+  Status * SActual = &statusPtr;
+  void * voidStatusPtr = SActual;
 
-	xTaskCreate(StatusMethod, "STATUSMETHOD", 500, voidStatusPtr, 1, NULL);
+  xTaskCreate(StatusMethod, "STATUSMETHOD", 500, voidStatusPtr, 1, NULL);
 
-	/* The suicide tasks must be created last as they need to know how many
-	tasks were running prior to their creation in order to ascertain whether
-	or not the correct/expected number of tasks are running at any given time. */
-	//   vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+  /* Start the scheduler. */
+  vTaskStartScheduler();
 
-	/* Configure the high frequency interrupt used to measure the interrupt
-	jitter time. */
-	//vSetupHighFrequencyTimer();
-
-	/* Start the scheduler. */
-	vTaskStartScheduler();
-
-	/* Will only get here if there was insufficient memory to create the idle
-	task. */
-	return 0;
+  /* Will only get here if there was insufficient memory to create the idle
+  task. */
+  return 0;
 }
 void Schedule(void * voidSchedulerDataPtr) {
 	while (1) {
@@ -452,6 +417,14 @@ void Keypad(void * voidKeypadDataPtr) {
        *scroll = 1;
       }
     }
+    else if (2 == *mode && 1 == *measurementSelection && 1 == cuffUp) {
+      if (cuff >= 10) {
+        cuff = cuff - 10;
+        if (cuff == 0) {
+          cuffUp = 0;
+        }
+      }
+    }
     downPressed = 0;
   }
   if (upPressed == 1) {
@@ -464,6 +437,16 @@ void Keypad(void * voidKeypadDataPtr) {
       }
       else {
        *scroll = 1;
+      }
+    }
+    else if (2 == *mode && 1 == *measurementSelection && 0 == cuffUp) {
+      if (cuff <= 90) {
+        cuff = cuff + 10;
+        if (100 == cuff) {
+          cuffUp = 1;
+          updateSys = 1;
+          updateDias = 1;
+        }
       }
     }
     upPressed = 0;
@@ -491,12 +474,6 @@ void delay(unsigned long aValue) {
 	return;
 }
 
-
-
-
-
-
-
 /*-----------------------------------------------------------*/
 
 void prvSetupHardware(void)
@@ -510,94 +487,11 @@ void prvSetupHardware(void)
 
 	/* Set the clocking to run from the PLL at 50 MHz */
 	SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_8MHZ);
-
-	/* 	Enable Port F for Ethernet LEDs
-	LED0        Bit 3   Output
-	LED1        Bit 2   Output */
-	//	SysCtlPeripheralEnable( SYSCTL_PERIPH_GPIOF );
-	//	GPIODirModeSet( GPIO_PORTF_BASE, (GPIO_PIN_2 | GPIO_PIN_3), GPIO_DIR_MODE_HW );
-	//	GPIOPadConfigSet( GPIO_PORTF_BASE, (GPIO_PIN_2 | GPIO_PIN_3 ), GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD );
-	//
-	//	vParTestInitialise();
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook(void)
 {
-	//static xOLEDMessage xMessage = { "PASS" };
-	//static unsigned long ulTicksSinceLastDisplay = 0;
-	//portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-	//
-	//	/* Called from every tick interrupt.  Have enough ticks passed to make it
-	//	time to perform our health status check again? */
-	//	ulTicksSinceLastDisplay++;
-	//	if( ulTicksSinceLastDisplay >= mainCHECK_DELAY )
-	//	{
-	//		ulTicksSinceLastDisplay = 0;
-	//
-	//		/* Has an error been found in any task? */
-	//		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
-	//		{
-	//			xMessage.pcMessage = "ERROR IN GEN Q";
-	//		}
-	//	    else if( xIsCreateTaskStillRunning() != pdTRUE )
-	//	    {
-	//	        xMessage.pcMessage = "ERROR IN CREATE";
-	//	    }
-	//	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-	//	    {
-	//	        xMessage.pcMessage = "ERROR IN MATH";
-	//	    }
-	//		else if( xAreIntQueueTasksStillRunning() != pdTRUE )
-	//		{
-	//			xMessage.pcMessage = "ERROR IN INT QUEUE";
-	//		}
-	//		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
-	//		{
-	//			xMessage.pcMessage = "ERROR IN BLOCK Q";
-	//		}
-	//		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
-	//		{
-	//			xMessage.pcMessage = "ERROR IN BLOCK TIME";
-	//		}
-	//		else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-	//		{
-	//			xMessage.pcMessage = "ERROR IN SEMAPHORE";
-	//		}
-	//		else if( xArePollingQueuesStillRunning() != pdTRUE )
-	//		{
-	//			xMessage.pcMessage = "ERROR IN POLL Q";
-	//		}
-	//		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
-	//		{
-	//			xMessage.pcMessage = "ERROR IN PEEK Q";
-	//		}
-	//		else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-	//		{
-	//			xMessage.pcMessage = "ERROR IN REC MUTEX";
-	//		}
-	//		else if( xAreQueueSetTasksStillRunning() != pdPASS )
-	//		{
-	//			xMessage.pcMessage = "ERROR IN Q SET";
-	//		}
-	//		else if( xAreEventGroupTasksStillRunning() != pdTRUE )
-	//		{
-	//			xMessage.pcMessage = "ERROR IN EVNT GRP";
-	//		}
-	//
-	//		configASSERT( strcmp( ( const char * ) xMessage.pcMessage, "PASS" ) == 0 );
-	//
-	//		/* Send the message to the OLED gatekeeper for display. */
-	//		xHigherPriorityTaskWoken = pdFALSE;
-	//		xQueueSendFromISR( xOLEDQueue, &xMessage, &xHigherPriorityTaskWoken );
-	//	}
-	//
-	//	/* Write to a queue that is in use as part of the queue set demo to
-	//	demonstrate using queue sets from an ISR. */
-	//	vQueueSetAccessQueueSetFromISR();
-	//
-	//	/* Call the event group ISR tests. */
-	//	vPeriodicEventGroupsProcessing();
 }
 /*-----------------------------------------------------------*/
 

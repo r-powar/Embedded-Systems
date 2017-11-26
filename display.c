@@ -83,9 +83,9 @@ void Display(void * voidDisplayDataPtr) {
     if (*mode == 2) {
       //build the string that will be output on the top line
             char sysTemp [10];
-            usprintf(sysTemp, "%d", *sys);
+            usprintf(sysTemp, "%d", staticSys);
             char diasTemp [10];
-            usprintf(diasTemp, "%d", *dias);
+            usprintf(diasTemp, "%d", staticDias);
             char * bpUnits = "mm Hg";
             strcat(sysTemp, bpUnits); 
             strcat(sysTemp, "/");
@@ -113,6 +113,17 @@ void Display(void * voidDisplayDataPtr) {
             strcat(valTemp, battTemp);
             strcat(valTemp, "    ");
             RIT128x96x4StringDraw(valTemp, 0, 15, 15);
+            
+            char * cuffDisp = (char *) pvPortMalloc(10*sizeof(char));
+            cuffDisp = "Cuff level: ";
+            char cuffTemp [10];
+            usprintf(cuffTemp, "%d", cuff);
+            char * percentMark = "%";
+            strcat(cuffTemp, percentMark);
+            strcat(cuffTemp, "   ");
+            RIT128x96x4StringDraw(cuffDisp, 0, 30, 15);
+            RIT128x96x4StringDraw(cuffTemp, 67, 30, 15);
+            
     }
     vTaskDelay(1000);
   }

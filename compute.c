@@ -33,6 +33,12 @@ void sysPressConversion(ComputeData *compute, unsigned int *sysRaw)
   int temp = SYSTOLIC_BASE + (SYSTOLIC_RATIO * *sysRaw);
   //*compute->bloodPressCorrectedBuf = temp;
   insertAtFront(temp, compute->bloodPressCorrectedBuf);
+  if(updateSys == 1) {
+    if ((180 - (15*(10 - (cuff/10))))){
+      staticSys = temp;
+      updateSys = 0;
+    }
+  }
 }
 
 void diasPressConversion(ComputeData *compute, unsigned int *diasRaw)
@@ -40,6 +46,12 @@ void diasPressConversion(ComputeData *compute, unsigned int *diasRaw)
   int temp = DIASTOLIC_BASE + (DIASTOLIC_RATIO * *diasRaw);
   //*(compute->bloodPressCorrectedBuf+8) = temp;
   insertAtFront(temp,compute->bloodPressCorrectedBuf+8);
+  if(updateDias == 1) {
+    if ((180 - (15*(10 - (cuff/10)))) <= temp){
+      staticDias = temp;
+      updateDias = 0;
+    }
+  }
 }
 
 void pulseRateConversion(ComputeData *compute, unsigned int *pulseRaw)

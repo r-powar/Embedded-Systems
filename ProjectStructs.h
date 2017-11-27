@@ -8,8 +8,8 @@ struct MeasureData{
 typedef struct MeasureData MeasureData;
 
 struct EKGCaptureData{
-	unsigned int * ekgRawBuf;
-	unsigned int * ekgFreqBuf;
+  unsigned int * ekgRawBuf;
+  unsigned int * ekgFreqBuf;
 };
 typedef struct EKGCaptureData EKGCaptureData;
 
@@ -29,6 +29,7 @@ struct DisplayData{
   unsigned int * tempCorrectedBuf;
   unsigned int * bloodPressCorrectedBuf;
   unsigned int * prCorrectedBuf;
+  unsigned int * ekgFreqBuf;
   short int * batteryState;
   unsigned short int * mode;
   unsigned short int * scroll;

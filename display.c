@@ -16,6 +16,7 @@ void Display(void * voidDisplayDataPtr) {
     unsigned int * sys = displayDataPtr->bloodPressCorrectedBuf;
     unsigned int * dias = displayDataPtr->bloodPressCorrectedBuf+8;
     unsigned int * pRate = displayDataPtr->prCorrectedBuf;
+    unsigned int * ekg = displayDataPtr->ekgFreqBuf;
     short int * bStatus = displayDataPtr->batteryState;
     unsigned short int * mode = displayDataPtr->mode;
     unsigned short int * scroll = displayDataPtr->scroll;
@@ -47,14 +48,17 @@ void Display(void * voidDisplayDataPtr) {
           //menu screen
         } else if (*mode == 1) {
           if (*measureSelect == 1) {
-            char * mattRules = "                 *";
-            RIT128x96x4StringDraw(mattRules, 0, 0, 15);
+            char * selectIndicator = "                 *";
+            RIT128x96x4StringDraw(selectIndicator, 0, 0, 15);
           } else if (*measureSelect == 2) { 
-            char * mattRules = "              *";
-            RIT128x96x4StringDraw(mattRules, 0, 15, 15);
+            char * selectIndicator = "              *";
+            RIT128x96x4StringDraw(selectIndicator, 0, 15, 15);
           } else if (*measureSelect == 3) {
-            char * mattRules = "            *";
-            RIT128x96x4StringDraw(mattRules, 0, 30, 15);
+            char * selectIndicator = "            *";
+            RIT128x96x4StringDraw(selectIndicator, 0, 30, 15);
+          } else if (4 == *measureSelect) {  
+            char * selectIndicator = "      *";
+            RIT128x96x4StringDraw(selectIndicator, 0, 45, 15);
           }
           if (*scroll == 0) {
             char * bpLine = " * Blood Pressure";
@@ -63,6 +67,8 @@ void Display(void * voidDisplayDataPtr) {
             RIT128x96x4StringDraw(tempLine, 0, 15, 15);
             char * hrLine = "   HeartRate";
             RIT128x96x4StringDraw(hrLine, 0, 30, 15);
+            char * ekgLine = "   EKG";
+            RIT128x96x4StringDraw(ekgLine, 0, 45, 15);
           } else if (*scroll == 1) {
             char * bpLine = "   Blood Pressure";
             RIT128x96x4StringDraw(bpLine, 0, 0, 15);
@@ -70,13 +76,26 @@ void Display(void * voidDisplayDataPtr) {
             RIT128x96x4StringDraw(tempLine, 0, 15, 15);
             char * hrLine = "   HeartRate";
             RIT128x96x4StringDraw(hrLine, 0, 30, 15);
-          } else {
+            char * ekgLine = "   EKG";
+            RIT128x96x4StringDraw(ekgLine, 0, 45, 15);
+          } else if (2 == *scroll) {
             char * bpLine = "   Blood Pressure";
             RIT128x96x4StringDraw(bpLine, 0, 0, 15);
             char * tempLine = "   Temperature";
             RIT128x96x4StringDraw(tempLine, 0, 15, 15);
             char * hrLine = " * HeartRate";
             RIT128x96x4StringDraw(hrLine, 0, 30, 15);
+            char * ekgLine = "   EKG";
+            RIT128x96x4StringDraw(ekgLine, 0, 45, 15);
+          } else if (3 == *scroll) {
+            char * bpLine = "   Blood Pressure";
+            RIT128x96x4StringDraw(bpLine, 0, 0, 15);
+            char * tempLine = "   Temperature";
+            RIT128x96x4StringDraw(tempLine, 0, 15, 15);
+            char * hrLine = "   HeartRate";
+            RIT128x96x4StringDraw(hrLine, 0, 30, 15);
+            char * ekgLine = " * EKG";
+            RIT128x96x4StringDraw(ekgLine, 0, 45, 15);
           }
         } 
     } 
@@ -114,6 +133,12 @@ void Display(void * voidDisplayDataPtr) {
             strcat(valTemp, "    ");
             RIT128x96x4StringDraw(valTemp, 0, 15, 15);
             
+            char * ekgDisp = "EKG: ";
+            RIT128x96x4StringDraw(ekgDisp, 0, 30, 15);
+            char ekgTemp [10];
+            usprintf(ekgTemp, "%d", *ekg);
+            RIT128x96x4StringDraw(ekgTemp, 25, 30, 15);
+            
             char * cuffDisp = (char *) pvPortMalloc(10*sizeof(char));
             cuffDisp = "Cuff level: ";
             char cuffTemp [10];
@@ -121,8 +146,8 @@ void Display(void * voidDisplayDataPtr) {
             char * percentMark = "%";
             strcat(cuffTemp, percentMark);
             strcat(cuffTemp, "   ");
-            RIT128x96x4StringDraw(cuffDisp, 0, 30, 15);
-            RIT128x96x4StringDraw(cuffTemp, 67, 30, 15);
+            RIT128x96x4StringDraw(cuffDisp, 0, 45, 15);
+            RIT128x96x4StringDraw(cuffTemp, 67, 45, 15);
             
     }
     vTaskDelay(1000);

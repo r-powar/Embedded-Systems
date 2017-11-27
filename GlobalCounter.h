@@ -12,3 +12,5 @@ extern int staticSys;
 extern int staticDias;
 extern int updateSys;
 extern int updateDias;
+extern int runEkgCap;
+extern int runEkgProc;

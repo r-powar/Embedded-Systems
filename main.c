@@ -243,6 +243,8 @@ int main(void)
   unsigned int * tempCorrected = (unsigned int *)pvPortMalloc(8 * sizeof(unsigned int));
   unsigned int * bloodPressCorrected = (unsigned int *)pvPortMalloc(16 * sizeof(unsigned int));
   unsigned int * prCorrected = (unsigned int *)pvPortMalloc(8 * sizeof(unsigned int));
+  unsigned int * ekgRawBuf = (unsigned int *)pvPortMalloc(256 * sizeof(unsigned int));
+  unsigned int * ekgFreqBuf = (unsigned int *)pvPortMalloc(8 * sizeof(unsigned int));
   tempCorrected[0] = 0;
   bloodPressCorrected[0] = 0;
   bloodPressCorrected[8] = 0;
@@ -269,17 +271,17 @@ int main(void)
   PWMOutputState(PWM_BASE, PWM_OUT_0_BIT | PWM_OUT_1_BIT, true);
 
   /* Exclude some tasks if using the kickstart version to ensure we stay within
-  the 32K code size limit. */
-#if mainINCLUDE_WEB_SERVER != 0
+    the 32K code size limit. */
+  #if mainINCLUDE_WEB_SERVER != 0  
   {
-          /* Create the uIP task if running on a processor that includes a MAC and
-          PHY. */
-          if (SysCtlPeripheralPresent(SYSCTL_PERIPH_ETH))
-          {
-                  xTaskCreate(vuIP_Task, "uIP", mainBASIC_WEB_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY - 1, NULL);
-          }
+    /* Create the uIP task if running on a processor that includes a MAC and
+            PHY. */
+    if (SysCtlPeripheralPresent(SYSCTL_PERIPH_ETH))
+    {
+      xTaskCreate(vuIP_Task, "uIP", mainBASIC_WEB_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY - 1, NULL);
+    }
   }
-#endif
+  #endif
 
   //create the TCB for Measure
   MeasureData measureDataPtr;
@@ -309,6 +311,30 @@ int main(void)
 
   xTaskCreate(Compute, "COMPUTE", 500, voidComputeDataPtr, 1, NULL);
 
+  //TCB for EKG capture
+  EKGCaptureData captureData;
+  captureData.ekgFreqBuf = ekgFreqBuf;
+  captureData.ekgRawBuf = ekgRawBuf;
+  EKGCaptureData * CapDataActual;
+  CapDataActual = (struct EKGCaptureData *)
+    pvPortMalloc(sizeof(struct EKGCaptureData));
+  CapDataActual = &captureData;
+  void * voidCaptureDataPtr = CapDataActual;
+ 
+  xTaskCreate(EKGCapture, "EKGCapture", 500, voidCaptureDataPtr, 1, NULL);
+  
+  //TCB for EKG processing
+  EKGCaptureData processingData;
+  processingData.ekgFreqBuf = ekgFreqBuf;
+  processingData.ekgRawBuf = ekgRawBuf;
+  EKGCaptureData * ProcDataActual;
+  ProcDataActual = (struct EKGCaptureData *)
+    pvPortMalloc(sizeof(struct EKGCaptureData));
+  ProcDataActual = &processingData;
+  void * voidProcessingDataPtr = ProcDataActual;
+  
+  xTaskCreate(EKGProcessing, "EKGProcessing", 1100, voidProcessingDataPtr, 1, NULL);
+  
   //create the TCB for Keypad
   KeypadData keypadDataPtr;
   keypadDataPtr.mode = mode;
@@ -320,13 +346,14 @@ int main(void)
   KDActual = &keypadDataPtr;
   void * voidKeypadDataPtr = KDActual;
 
-  xTaskCreate(Keypad, "KEYPAD", 100, voidKeypadDataPtr, 1, NULL);
+  xTaskCreate(Keypad, "KEYPAD", 500, voidKeypadDataPtr, 1, NULL);
 
   //create the TCB for Display
   DisplayData displayDataPtr;
   displayDataPtr.tempCorrectedBuf = tempCorrected;
   displayDataPtr.bloodPressCorrectedBuf = bloodPressCorrected;
   displayDataPtr.prCorrectedBuf = prCorrected;
+  displayDataPtr.ekgFreqBuf = ekgFreqBuf;
   displayDataPtr.batteryState = batteryState;
   displayDataPtr.mode = mode;
   displayDataPtr.scroll = scroll;
@@ -337,7 +364,7 @@ int main(void)
   DDActual = &displayDataPtr;
   void * voidDisplayDataPtr = DDActual;
 
-  xTaskCreate(Display, "DISPLAY", 1000, voidDisplayDataPtr, 1, NULL);
+  xTaskCreate(Display, "DISPLAY", 1500, voidDisplayDataPtr, 1, NULL);
 
   //create the TCB for WarningAlarm
   WarningAlarmData warningAlarmDataPtr;
@@ -403,6 +430,9 @@ void Keypad(void * voidKeypadDataPtr) {
       *measurementSelection = *scroll+1;
       *select = 1;
     }
+    if(*mode == 1 && *measurementSelection == 4) {
+      runEkgCap = 1;
+    }
     selectPressed = 0;
   }
   if (downPressed == 1) {
@@ -410,8 +440,11 @@ void Keypad(void * voidKeypadDataPtr) {
       *scroll= 1;  
     }
     else if (*mode == 1) {
-      if (*scroll >= 1) {
-       *scroll = 2; 
+      if (*scroll >= 2) {
+       *scroll = 3; 
+      }
+      else if (1 == *scroll) {
+        *scroll = 2;
       }
       else {
        *scroll = 1;
@@ -436,7 +469,7 @@ void Keypad(void * voidKeypadDataPtr) {
        *scroll = 0; 
       }
       else {
-       *scroll = 1;
+       *scroll -= 1;
       }
     }
     else if (2 == *mode && 1 == *measurementSelection && 0 == cuffUp) {

@@ -13,8 +13,7 @@ void EKGProcessing(void * voidEKGCaptureDataPtr)
       EKGCaptureData * ekgCapturePtr = voidEKGCaptureDataPtr;
       
       // create buffer of 0s for imaginary portion
-      unsigned int * ekgImagBuf = 
-        (unsigned int *)pvPortMalloc(256 * sizeof(unsigned int));
+      signed int ekgImagBuf[256];
       
       for (int x = 0; x < 256; x++) {
         ekgImagBuf[x] = 0;

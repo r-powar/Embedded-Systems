@@ -22,7 +22,8 @@
 #include "rit128x96x4.h"
 #include "osram128x64x4.h"
 #include "formike128x128x16.h"
-#include "inc/hw_ints.h"
+//#include "inc/hw_ints.h"
+#include "hw_ints.h"
 
 /* Demo app includes. */
 #include "BlockQ.h"
@@ -42,10 +43,12 @@
 #include "QueueSet.h"
 #include "EventGroupsDemo.h"
 #include "GlobalCounter.c"
-#include "driverlib/pwm.h"
+//#include "driverlib/pwm.h"
+#include "pwm.h"
 #include "projectStructs.h"
 #include "TCB.h"
-#include "utils/ustdlib.c"
+//#include "utils/ustdlib.c"
+#include "ustdlib.c"
 //given delay function
 void delay(unsigned long aValue);
 struct DataStruct {
@@ -243,7 +246,7 @@ int main(void)
   unsigned int * tempCorrected = (unsigned int *)pvPortMalloc(8 * sizeof(unsigned int));
   unsigned int * bloodPressCorrected = (unsigned int *)pvPortMalloc(16 * sizeof(unsigned int));
   unsigned int * prCorrected = (unsigned int *)pvPortMalloc(8 * sizeof(unsigned int));
-  unsigned int * ekgRawBuf = (unsigned int *)pvPortMalloc(256 * sizeof(unsigned int));
+  int * ekgRawBuf = (int *)pvPortMalloc(256 * sizeof(int));
   unsigned int * ekgFreqBuf = (unsigned int *)pvPortMalloc(8 * sizeof(unsigned int));
   tempCorrected[0] = 0;
   bloodPressCorrected[0] = 0;

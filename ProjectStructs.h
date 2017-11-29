@@ -8,7 +8,7 @@ struct MeasureData{
 typedef struct MeasureData MeasureData;
 
 struct EKGCaptureData{
-  unsigned int * ekgRawBuf;
+  int * ekgRawBuf;
   unsigned int * ekgFreqBuf;
 };
 typedef struct EKGCaptureData EKGCaptureData;

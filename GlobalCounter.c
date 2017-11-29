@@ -13,3 +13,5 @@ int staticSys = 0;
 int staticDias = 0;
 int updateSys = 0;
 int updateDias = 0;
+int runEkgCap = 0;
+int runEkgProc = 0;
